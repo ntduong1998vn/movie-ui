@@ -67,10 +67,9 @@ class FormikCustomComponents extends Component {
     let temp = [];
     let { image } = this.state;
     values.genres.map(t =>
-      temp.push({
-        name: t.value,
-        id: t.id,
-      }))
+      temp.push(
+         t.id,
+      ))
     const payload = {
       ...values,
       genres: temp
@@ -83,8 +82,9 @@ class FormikCustomComponents extends Component {
     formSubmit.append('title', payload.name);
     formSubmit.append('nation', payload.nation);
     formSubmit.append('adult', payload.adult);
-    console.log(JSON.stringify(payload.genres))
-    formSubmit.append('genres', JSON.stringify(payload.genres));
+    for (let i = 0; i < payload.genres.length; i++) {
+      formSubmit.append(`genres[${i}].id`, payload.genres[i])  
+    }
     formSubmit.append('imdb', payload.imdb);
     formSubmit.append('language', payload.selectLanguage);
     formSubmit.append('quality', payload.selectQuality);

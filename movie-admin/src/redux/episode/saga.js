@@ -14,10 +14,11 @@ import {
     addEpisodeError,
     editEpisodeSuccess,
     editEpisodeError,
-  
+    deleteEpisodeSuccess,
+    deleteEpisodeError
 } from './actions';
 
-import { queryListEpisodes, queryEpisodeByID, addEpisode, updateEpisode } from '../../repository/episode';
+import { queryListEpisodes, queryEpisodeByMovieID, addEpisode, updateEpisode, deleteEpisode } from '../../repository/episode';
 
 export function* watchGetListEpisode() {
     yield takeLatest(GET_EPISODE, handleGetListEpisode)
@@ -50,7 +51,7 @@ export function* watchGetEpisodeByID() {
 function* handleGetEpisodeByID({ payload }) {
     const id = payload
     try {
-        const episode = yield call(queryEpisodeByID, id);
+        const episode = yield call(queryEpisodeByMovieID, id);
         if (!episode.message) {
             yield put(getEpisodeByIDSuccess(episode.result))
         }
@@ -104,12 +105,32 @@ function* handleEditEpisode({ payload }) {
         yield put(editEpisodeError(error))
     }
 }
+export function* watchDeleteEpisode() {
+    yield takeLatest(DELETE_EPISODE, handleDeleteEpisode)
+}
 
+function* handleDeleteEpisode({ payload }) {
+    const id = payload;
+    console.log(id)
+    try {
+        const deleted = yield call(deleteEpisode, id);
+        console.log(deleted);
+        if (deleted.success === "OK") {
+            yield put(deleteEpisodeSuccess(deleted.message))
+        }
+        else {
+            yield put(deleteEpisodeError(deleted.message))
+        }
+    } catch (error) {
+        yield put(deleteEpisodeError(error))
+    }
+}
 export default function* rootSaga() {
     yield all([
         fork(watchGetListEpisode),
         fork(watchGetEpisodeByID),
         fork(watchAddEpisode),
         fork(watchEditEpisode),
+        fork(watchDeleteEpisode),
     ]);
 }

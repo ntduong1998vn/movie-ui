@@ -95,6 +95,20 @@ class DetailsPages extends Component {
     let status = this.props.item.visible;
     this.props.deleteMovie(id, !status)
   }
+  deleteComment = e => {
+    console.log(e)
+    let id = e;
+    this.props.deleteComment(id);
+    setTimeout(() => { this.dataListRender() }, 100)
+  }
+
+  deleteReview = e => {
+    console.log(e)
+    let id = e;
+    this.props.deleteReview(id);
+    setTimeout(() => { this.dataListRender() }, 100)
+  }
+
   toggleTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
@@ -222,23 +236,10 @@ class DetailsPages extends Component {
                     }}
                     to="#"
                   >
-                    <IntlMessages id="pages.comments" />
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink
-                    className={classnames({
-                      active: this.state.activeFirstTab === "4",
-                      "nav-link": true
-                    })}
-                    onClick={() => {
-                      this.toggleTab("4");
-                    }}
-                    to="#"
-                  >
                     <IntlMessages id="pages.reviews" />
                   </NavLink>
                 </NavItem>
+
               </Nav>
 
               <TabContent activeTab={this.state.activeFirstTab}>
@@ -329,8 +330,7 @@ class DetailsPages extends Component {
                     </Colxx>
 
                     <Colxx xxs="12" lg="8">
-                      <SmallLineCharts itemClass="dashboard-small-chart-analytics" />
-                      <WebsiteVisitsChartCard className="mb-4" controls={false} />
+                      <NewComments className="mb-4" displayRate={false} comment={comments} deleteFlag={this.deleteComment} />
                     </Colxx>
                   </Row>
                 </TabPane>
@@ -339,10 +339,7 @@ class DetailsPages extends Component {
                   <FormikEditMovie movie={item} />
                 </TabPane>
                 <TabPane tabId="3">
-                  <NewComments className="mb-4" displayRate={false} comment={comments} />
-                </TabPane>
-                <TabPane tabId="4">
-                  <NewReviews className="mb-4" displayRate={true} reviews={reviews} />
+                  <NewReviews className="mb-4" displayRate={true} reviews={reviews} deleteFlag={this.deleteReview} />
                 </TabPane>
               </TabContent>
             </Colxx>
