@@ -23,5 +23,15 @@ export const addReview = async (reviewForm) => {
 };
 
 export const deleteReview = async (id) => {
-  return await axios.delete(`${apiReview}/${id}`);
-};
+  return await axios
+    .delete(`${apiReview}/${id}`)
+    .then(res => res.data)
+    .catch(err => err.response)
+}
+
+export const deleteManyReviews = async (listId) => {
+  return await axios
+    .delete(`${apiReview}/delete-many`, listId)
+    .then(res => res.data)
+    .catch(err => err.response)
+}

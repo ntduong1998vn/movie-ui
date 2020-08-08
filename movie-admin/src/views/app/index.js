@@ -32,10 +32,6 @@ class App extends Component {
                 path={`${match.url}/manager`}
                 render={props => <SecondMenu {...props} />}
               />
-              <Route
-                path={`${match.url}/blank-page`}
-                render={props => <BlankPage {...props} />}
-              />
               <Redirect to="/error" />
             </Switch>
           </Suspense>

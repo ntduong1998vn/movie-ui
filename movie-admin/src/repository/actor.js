@@ -10,7 +10,7 @@ export const queryListActors = async (
   return await axios
     .get(
       `${apiActor}/?pageSize=${selectedPageSize}&currentPage=${
-        currentPage - 1
+      currentPage - 1
       }&orderBy=${selectedOrderOption.column}&search=${search}`
     )
     .then((res) => res.data)
@@ -34,6 +34,6 @@ export const updateActor = async (id, actorForm) => {
 export const deleteActor = async (id) => {
   return await axios
     .delete(`${apiActor}/${id}`)
-    .then((res) => res.data)
-    .catch((error) => error.response);
-};
+    .then(res => res.data)
+    .catch(error => error.response)
+}
