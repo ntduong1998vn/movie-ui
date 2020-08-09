@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from "react";
-import logo from "../assets/img/logo.svg";
 import bgImg from "../assets/img/section/section.jpg";
 import { yupResolver } from "@hookform/resolvers";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions";
+import { Link } from "react-router-dom";
 
-const SignUpSchema = yup.object().shape({
+const SignInSchema = yup.object().shape({
   username: yup
     .string()
     // .length(60, "Tối đa 60 ký tự")
@@ -21,7 +21,7 @@ const SignUpSchema = yup.object().shape({
 
 function SignIn(props) {
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(SignUpSchema),
+    resolver: yupResolver(SignInSchema),
   });
 
   useEffect(() => {
@@ -52,7 +52,10 @@ function SignIn(props) {
               <div className="sign__content">
                 <form className="sign__form" onSubmit={handleSubmit(onSubmit)}>
                   <a href="index.html" className="sign__logo">
-                    <img src={logo} alt="" />
+                    <img
+                      src={process.env.PUBLIC_URL + "/img/logo.svg"}
+                      alt="LOGO"
+                    />
                   </a>
 
                   <div className="sign__group">
@@ -92,7 +95,7 @@ function SignIn(props) {
                   </button>
 
                   <span className="sign__text">
-                    Không có tài khoản? <a href="/sign-up">Đăng ký!</a>
+                    Không có tài khoản? <Link to="register">Đăng ký!</Link>
                   </span>
 
                   <span className="sign__text">

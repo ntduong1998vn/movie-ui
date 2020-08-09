@@ -3,7 +3,7 @@ import logo from "../assets/img/logo.svg";
 import SearchBox from "./SearchBox";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-const Header = ({user}) => {
+const Header = ({ user }) => {
   useEffect(() => {
     let searchBtn = document.querySelector(".header__search-btn");
     let headerBtn = document.querySelector(".header__btn");
@@ -137,13 +137,13 @@ const Header = ({user}) => {
                   </button>
 
                   {user === null ? (
-                    <Link to="/sign-in" className="header__sign-in">
+                    <Link to="/login" className="header__sign-in">
                       <i className="icon ion-ios-log-in"></i>
                       <span>Đăng Nhập</span>
                     </Link>
                   ) : (
-                    <Link to="/sign-in" className="header__sign-in">
-                      <i className="icon ion-ios-log-in"></i>
+                    <Link to="/user" className="header__sign-in">
+                      <i className="icon ion-ios-person"></i>
                       <span>{user.name}</span>
                     </Link>
                   )}
