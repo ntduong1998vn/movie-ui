@@ -14,7 +14,7 @@ import Select from "react-select";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import IntlMessages from "../../helpers/IntlMessages";
 
-import { addSurveyItem } from "../../redux/actions";
+import { addSurveyItem } from "../../redux/surveyList/actions";
 
 class AddNewSurveyModal extends Component {
   constructor(props) {

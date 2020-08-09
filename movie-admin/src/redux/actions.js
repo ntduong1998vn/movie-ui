@@ -202,3 +202,4 @@ export * from "./comment/actions";
 export * from "./review/actions";
 export * from "./episode/actions";
 export * from "./user/actions";
+export * from "./surveyDetail/actions";

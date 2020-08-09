@@ -8,7 +8,7 @@ import classnames from "classnames";
 import IntlMessages from "../../helpers/IntlMessages";
 import ApplicationMenu from "../../components/common/ApplicationMenu";
 
-import { getSurveyListWithFilter } from "../../redux/actions";
+import { getSurveyListWithFilter } from "../../redux/surveyList/actions";
 export class SurveyApplicationMenu extends Component {
   constructor(props) {
     super();

@@ -10,6 +10,8 @@ import reviewData from "./review/reducer";
 import episodeData from "./episode/reducer";
 import userData from "./user/reducer";
 import authUser from "./auth/reducer";
+import surveyListApp from "./surveyList/reducer";
+import surveyDetailApp from "./surveyDetail/reducer";
 
 const reducers = combineReducers({
   menu,
@@ -23,6 +25,8 @@ const reducers = combineReducers({
   episodeData,
   userData,
   authUser,
+  surveyListApp,
+  surveyDetailApp
 });
 
 export default reducers;

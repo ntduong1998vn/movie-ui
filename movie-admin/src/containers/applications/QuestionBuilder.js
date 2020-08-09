@@ -8,7 +8,9 @@ import {
   Form,
   Input,
   Badge,
-  CustomInput
+  CustomInput,
+  Col,
+  Row,
 } from "reactstrap";
 import Select from "react-select";
 import Sortable from "react-sortablejs";
@@ -17,11 +19,16 @@ import CustomSelectInput from "../../components/common/CustomSelectInput";
 
 import { mapOrder } from "../../helpers/Utils";
 
-const answerTypes = [
-  { label: "Text Area", value: "1", id: 1 },
-  { label: "Checkbox", value: "2", id: 2 },
-  { label: "Radiobutton", value: "3", id: 3 }
+const serverList = [
+  { label: "YOUTUBE", value: "1", id: 1 },
+  { label: "GDRIVE", value: "2", id: 2 },
+  { label: "LOTUS", value: "3", id: 3 },
 ];
+const resolutionList = [
+  { label: "480p", value: "1", id: 1 },
+  { label: "720p", value: "2", id: 2 },
+  { label: "HD", value: "3", id: 3 },
+]
 export default class SurveyQuestionBuilder extends React.Component {
   constructor(props) {
     super(props);
@@ -32,11 +39,11 @@ export default class SurveyQuestionBuilder extends React.Component {
       title: this.props.title || "",
       question: this.props.question || "",
       answerType: this.props.answerType
-        ? answerTypes.find(item => {
-            return item.id === this.props.answerType;
-          })
+        ? serverList.find((item) => {
+          return item.id === this.props.answerType;
+        })
         : null,
-      answers: this.props.answers || []
+      answers: this.props.answers || [],
     };
   }
   deleteClick = () => {
@@ -53,7 +60,7 @@ export default class SurveyQuestionBuilder extends React.Component {
     this.setState({ mode: "view-quesiton" });
     this.setState({ collapse: true });
   };
-  typeChange = answerType => {
+  typeChange = (answerType) => {
     if (this.state.answerType) {
       if (
         (this.state.answerType.id === 2 || this.state.answerType.id === 3) &&
@@ -65,9 +72,9 @@ export default class SurveyQuestionBuilder extends React.Component {
 
     this.setState({ answerType });
   };
-  removeAnswer = answerId => {
+  removeAnswer = (answerId) => {
     this.setState({
-      answers: this.state.answers.filter(item => item.id !== answerId)
+      answers: this.state.answers.filter((item) => item.id !== answerId),
     });
   };
   addAnswer = () => {
@@ -79,18 +86,18 @@ export default class SurveyQuestionBuilder extends React.Component {
       nextId = orderedAnswers[0].id + 1;
     }
     this.setState({
-      answers: [...this.state.answers, { id: nextId, label: "" }]
+      answers: [...this.state.answers, { id: nextId, label: "" }],
     });
   };
 
   updateAnswer = (answerId, event) => {
     var answerIndex = this.state.answers.findIndex(
-      item => item.id === answerId
+      (item) => item.id === answerId
     );
     var answers = this.state.answers;
     answers[answerIndex]["label"] = event.target.value;
     this.setState({
-      answers
+      answers,
     });
   };
 
@@ -105,14 +112,15 @@ export default class SurveyQuestionBuilder extends React.Component {
         return (
           <FormGroup>
             {" "}
-            {this.state.answers.map(answer => {
+            {this.state.answers.map((answer) => {
               return (
                 <CustomInput
                   key={answer.id}
                   type="checkbox"
                   id={`checkbox${this.state.id}_${answer.id}`}
                   name={`checkbox${this.state.id}`}
-                  label={answer.label}/>
+                  label={answer.label}
+                />
               );
             })}{" "}
           </FormGroup>
@@ -120,21 +128,27 @@ export default class SurveyQuestionBuilder extends React.Component {
       case 3:
         return (
           <FormGroup>
-            {this.state.answers.map(answer => {
+            {this.state.answers.map((answer) => {
               return (
                 <CustomInput
                   key={answer.id}
                   type="radio"
                   name={`radio${this.state.id}`}
                   id={`radio${this.state.id}_${answer.id}`}
-                  label={answer.label}/>
+                  label={answer.label}
+                />
               );
             })}
           </FormGroup>
         );
       default:
         return (
-          <Input type="text" placeholder="" value={""} onChange={event => {}} />
+          <Input
+            type="text"
+            placeholder=""
+            value={""}
+            onChange={(event) => { }}
+          />
         );
     }
   };
@@ -156,7 +170,8 @@ export default class SurveyQuestionBuilder extends React.Component {
               outline
               color={"theme-3"}
               className="icon-button ml-1 edit-button"
-              onClick={this.editClick} >
+              onClick={this.editClick}
+            >
               <i className="simple-icon-pencil" />
             </Button>
 
@@ -164,7 +179,8 @@ export default class SurveyQuestionBuilder extends React.Component {
               outline
               color={"theme-3"}
               className="icon-button ml-1 view-button no-border"
-              onClick={this.viewClick} >
+              onClick={this.viewClick}
+            >
               <i className="simple-icon-eye" />
             </Button>
 
@@ -173,8 +189,9 @@ export default class SurveyQuestionBuilder extends React.Component {
               color={"theme-3"}
               className={`icon-button ml-1 rotate-icon-click ${
                 this.state.collapse ? "rotate" : ""
-              }`}
-              onClick={this.toggleClick}>
+                }`}
+              onClick={this.toggleClick}
+            >
               <i className="simple-icon-arrow-down" />
             </Button>
 
@@ -182,7 +199,8 @@ export default class SurveyQuestionBuilder extends React.Component {
               outline
               color={"theme-3"}
               className="icon-button ml-1"
-              onClick={this.deleteClick}>
+              onClick={this.deleteClick}
+            >
               <i className="simple-icon-ban" />
             </Button>
           </div>
@@ -192,89 +210,86 @@ export default class SurveyQuestionBuilder extends React.Component {
           <div className="card-body pt-0">
             <div className="edit-mode">
               <Form>
-                <FormGroup>
-                  <Label>Title</Label>
-                  <Input
-                    type="text"
-                    value={this.state.title}
-                    onChange={event => {
-                      this.setState({ title: event.target.value });
-                    }}/>
-                </FormGroup>
-
-                <FormGroup>
-                  <Label>Question</Label>
-                  <Input
-                    type="text"
-                    value={this.state.question}
-                    onChange={event => {
-                      this.setState({ question: event.target.value });
-                    }}/>
-                </FormGroup>
-                <div className="separator mb-4 mt-4" />
-
-                <FormGroup>
-                  <Label>Answer Type</Label>
-                  <Select
-                    components={{ Input: CustomSelectInput }}
-                    className="react-select"
-                    classNamePrefix="react-select"
-                    name="form-field-name"
-                    value={this.state.answerType}
-                    onChange={this.typeChange}
-                    options={answerTypes}/>
-                </FormGroup>
-                {this.state.answers.length > 0 && <Label>Answers</Label>}
+                <Label>Danh sách link phim</Label>
 
                 <Sortable
                   className="answers"
                   options={{
-                    handle: ".handle"
+                    handle: ".handle",
                   }}
                   onChange={(order, sortable, evt) => {
                     var answers = mapOrder(this.state.answers, order, "id");
                     this.setState({ answers });
-                  }}>
-                  {this.state.answers.map(item => {
+                  }}
+                >
+                  {this.state.answers.map((item) => {
                     return (
-                      <FormGroup
-                        data-id={item.id}
-                        key={item.id}
-                        className="mb-1">
-                        <Input
-                          type="text"
-                          value={item.label}
-                          autoFocus
-                          onChange={event => {
-                            this.updateAnswer(item.id, event);
-                          }}/>
-                        <div className="input-icons">
+                      <Row>
+                          <Col md={2}>
+                          <Select
+                            components={{ Input: CustomSelectInput }}
+                            className="react-select"
+                            classNamePrefix="react-select"
+                            name="form-field-name"
+                            value={this.state.answerType}
+                            onChange={this.typeChange}
+                            options={serverList} />
+                        </Col>
+                        <Col md={2}>
+                          <Select
+                            components={{ Input: CustomSelectInput }}
+                            className="react-select"
+                            classNamePrefix="react-select"
+                            name="form-field-name"
+                            value={this.state.answerType}
+                            onChange={this.typeChange}
+                            options={resolutionList} />
+                        </Col>
+                        <Col md={8}>
+                          <FormGroup
+                            data-id={item.id}
+                            key={item.id}
+                            className="mb-1"
+                          >
+                            <Input
+                              type="text"
+                              value={item.label}
+                              autoFocus
+                              onChange={(event) => {
+                                this.updateAnswer(item.id, event);
+                              }}
+                              inline
+                            />
+                          <div className="input-icons">
                           <Badge className="handle" color="empty" pill>
                             <i className="simple-icon-cursor-move" />
                           </Badge>
                           <Badge
                             color="empty"
                             pill
-                            onClick={() => this.removeAnswer(item.id)} >
+                            onClick={() => this.removeAnswer(item.id)}
+                          >
                             <i className="simple-icon-close" />
                           </Badge>
                         </div>
-                      </FormGroup>
+                          </FormGroup>
+                        </Col>
+                      
+                      
+                      </Row>
                     );
                   })}
                 </Sortable>
 
                 <div className="text-center">
-                  {this.state.answerType && this.state.answerType.id !== 1 && (
-                    <Button
-                      outline
-                      color="primary"
-                      className="mt-3"
-                      onClick={() => this.addAnswer()}>
-                      <i className="simple-icon-plus btn-group-icon" /> Add
-                      Answer
-                    </Button>
-                  )}
+                  <Button
+                    outline
+                    color="primary"
+                    className="mt-3"
+                    onClick={() => this.addAnswer()}
+                  >
+                    <i className="simple-icon-plus btn-group-icon" /> Add Answer
+                  </Button>
                 </div>
               </Form>
             </div>
