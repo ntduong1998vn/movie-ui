@@ -9,9 +9,11 @@ const instance = axios.create({
   },
 });
 
+// axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem(
+//   ACCESS_TOKEN
+// )}`;
+
 instance.interceptors.request.use(function (config) {
-  let token = localStorage.getItem(ACCESS_TOKEN);
-  config.headers.common["Authorization"] = `Bearer ${token}`;
   console.log(config.headers.common["Authorization"]);
   return config;
 });

@@ -1,5 +1,4 @@
 import axios, { setAuthToken } from "./../helpers/axios.instance";
-import { ACCESS_TOKEN } from "../constants/auth";
 
 export async function loginWithEmailPasswordAsync(username, password) {
   return await axios
@@ -22,9 +21,6 @@ export async function getCurrentUser() {
     .catch((error) => error.response.data);
 }
 
-export function logOut() {
-  localStorage.removeItem(ACCESS_TOKEN);
-}
 // export function forgetPassword() {
 //   return request({
 //     url: API_BASE_URL + "/forgetpassword",
@@ -32,18 +28,47 @@ export function logOut() {
 //   });
 // }
 
-export async function register(registerForm) {
-  return await axios
-    .post(`/api/auth/register`, registerForm)
-    .then((res) => true)
-    .catch((error) => {
-      console.log(error.response);
-      return false;
-    });
-}
+// export function sendMail() {
+//   return request({
+//     url: API_BASE_URL + "/sendmail",
+//     method: "GET",
+//   });
+// }
 
-export default {
-  getCurrentUser,
-  register,
-  loginWithEmailPasswordAsync,
-};
+// export async function signup(signupRequest) {
+//   const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify(signupRequest),
+//   });
+
+//   const json = response.json();
+//   if (!response.ok) return Promise.reject(json);
+//   return json;
+// }
+
+// export async function updateUser(userObject) {
+//   const headers = new Headers();
+//   if (localStorage.getItem(ACCESS_TOKEN)) {
+//     const auth = localStorage.getItem(ACCESS_TOKEN);
+//     const response = await fetch(`${API_BASE_URL}/user/`, {
+//       method: "PATCH",
+//       headers: {
+//         Authorization: `Bearer ${auth}`,
+//       },
+//       body: userObject,
+//     });
+
+//     const json = await response.json();
+
+//     if (response.status !== 202) {
+//       return Promise.reject(json);
+//     }
+
+//     return json;
+//   } else {
+//     return Promise.reject(new Error("Bạn chưa đăng nhập!"));
+//   }
+// }

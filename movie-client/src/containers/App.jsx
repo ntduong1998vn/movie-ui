@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Switch, Route } from "react-router-dom";
 import { connect } from "react-redux";
 
@@ -11,19 +11,9 @@ import Footer from "../components/Footer";
 import MoveDetailPage from "./MovieDetailPage";
 import HomePage from "./HomePage";
 import CatalogPage from "./CatalogPage";
-import UserPage from "./UserPage";
-import PrivateRoute from "../components/Common/PrivateRoute";
-import RestrictedRoute from "../components/Common/RestrictedRoute";
-import { ACCESS_TOKEN } from "../constants/auth";
-import { getUserInfor } from "../redux/actions";
+import AuthRoute from "../helpers/AuthRoute";
+
 const App = (props) => {
-  useEffect(() => {
-    if (localStorage.getItem(ACCESS_TOKEN) !== null) {
-      console.log("Load User");
-      props.getUserInfor();
-    }
-    return () => {};
-  }, []);
   return (
     <React.Fragment>
       <Header user={props.user} />
@@ -42,27 +32,11 @@ const App = (props) => {
           path="/movie/:id"
           render={(props) => <MoveDetailPage {...props} />}
         />
-        <RestrictedRoute
-          path="/login"
-          authenticated={props.user}
-          restricted
-          component={SignIn}
-        />
-        <RestrictedRoute
-          authenticated={props.user}
-          restricted
-          path="/register"
-          component={SignUp}
-        />
+        <Route path="/sign-in" render={(props) => <SignIn {...props} />} />
+        <Route path="/sign-up" render={(props) => <SignUp {...props} />} />
         <Route
           path="/update-account"
           render={(props) => <PaidPage {...props} />}
-        />
-        <PrivateRoute
-          authenticated={props.user}
-          path="/user"
-          // render={(props) => <UserPage {...props} />}
-          component={UserPage}
         />
         {/* <Route path="/genre/:type/:page" component={CatalogPage} /> */}
         {/* <Route path="/genre/:id" component={GenrePage} /> */}
@@ -76,4 +50,4 @@ const mapStateToProps = ({ authUser }) => {
   const { user, loading, error } = authUser;
   return { user, loading, error };
 };
-export default connect(mapStateToProps, { getUserInfor })(App);
+export default connect(mapStateToProps, null)(App);
