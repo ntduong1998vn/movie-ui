@@ -137,12 +137,12 @@ const Header = ({user}) => {
                   </button>
 
                   {user === null ? (
-                    <Link to="/sign-in" className="header__sign-in">
+                    <Link to="/login" className="header__sign-in">
                       <i className="icon ion-ios-log-in"></i>
                       <span>Đăng Nhập</span>
                     </Link>
                   ) : (
-                    <Link to="/sign-in" className="header__sign-in">
+                    <Link to="/user" className="header__sign-in">
                       <i className="icon ion-ios-log-in"></i>
                       <span>{user.name}</span>
                     </Link>

@@ -10,14 +10,13 @@ import {
 import {
   loginWithEmailPasswordAsync,
   getCurrentUser,
+  register,
 } from "./../../repository/AuthAPI";
-import { ACCESS_TOKEN } from "./../../constants/auth";
+
 import {
   LOGIN_USER,
   REGISTER_USER,
-  LOGOUT_USER,
   FORGOT_PASSWORD,
-  RESET_PASSWORD,
   GET_USER,
   GET_USER_SUCCESS,
 } from "../actions";
@@ -29,8 +28,6 @@ import {
   registerUserError,
   forgotPasswordSuccess,
   forgotPasswordError,
-  resetPasswordSuccess,
-  resetPasswordError,
   getUserSuccess,
 } from "./actions";
 
@@ -38,20 +35,12 @@ export function* watchLoginUser() {
   yield takeLatest(LOGIN_USER, loginWithEmailPassword);
 }
 
-export function* watchLogoutUser() {
-  yield takeEvery(LOGOUT_USER, logout);
-}
-
-export function* watchRegisterUser() {
-  yield takeEvery(REGISTER_USER, registerWithEmailPassword);
-}
+// export function* watchRegisterUser() {
+//   yield takeEvery(REGISTER_USER, registerWithEmailPassword);
+// }
 
 export function* watchForgotPassword() {
   yield takeEvery(FORGOT_PASSWORD, forgotPassword);
-}
-
-export function* watchResetPassword() {
-  yield takeEvery(RESET_PASSWORD, resetPassword);
 }
 
 export function* watchGetUserInfor() {
@@ -72,7 +61,7 @@ function* loginWithEmailPassword({ payload }) {
       const { payload: user } = yield take(GET_USER_SUCCESS);
       console.log(user);
       yield put(loginUserSuccess(user));
-      history.push("/");
+      history.push("/user");
     } else {
       yield put(loginUserError(response.message));
     }
@@ -96,33 +85,26 @@ function* getUserInfor() {
 }
 const registerWithEmailPasswordAsync = async (email, password) => {};
 
-function* registerWithEmailPassword({ payload }) {
-  const { email, password } = payload.user;
-  const { history } = payload;
-  try {
-    const registerUser = yield call(
-      registerWithEmailPasswordAsync,
-      email,
-      password
-    );
-    if (!registerUser.message) {
-      localStorage.setItem("user_id", registerUser.user.uid);
-      yield put(registerUserSuccess(registerUser));
-      history.push("/");
-    } else {
-      yield put(registerUserError(registerUser.message));
-    }
-  } catch (error) {
-    yield put(registerUserError(error));
-  }
-}
-
-function* logout({ payload }) {
-  const { history } = payload;
-  try {
-    localStorage.removeItem(ACCESS_TOKEN);
-  } catch (error) {}
-}
+// function* registerWithEmailPassword({ payload }) {
+//   const { email, password } = payload.user;
+//   const { history } = payload;
+//   try {
+//     const registerUser = yield call(
+//       registerWithEmailPasswordAsync,
+//       email,
+//       password
+//     );
+//     if (!registerUser.message) {
+//       localStorage.setItem("user_id", registerUser.user.uid);
+//       yield put(registerUserSuccess(registerUser));
+//       history.push("/");
+//     } else {
+//       yield put(registerUserError(registerUser.message));
+//     }
+//   } catch (error) {
+//     yield put(registerUserError(error));
+//   }
+// }
 
 const forgotPasswordAsync = async (email) => {};
 
@@ -140,34 +122,38 @@ function* forgotPassword({ payload }) {
   }
 }
 
-const resetPasswordAsync = async (resetPasswordCode, newPassword) => {};
+/**
+ * Register saga
+ * Very similar to log in saga!
+ */
+export function* registerFlow() {
+  while (true) {
+    // We always listen to `REGISTER_REQUEST` actions
+    const request = yield take(REGISTER_USER);
+    const { user, history } = request.payload;
 
-function* resetPassword({ payload }) {
-  const { newPassword, resetPasswordCode } = payload;
-  try {
-    const resetPasswordStatus = yield call(
-      resetPasswordAsync,
-      resetPasswordCode,
-      newPassword
-    );
-    if (!resetPasswordStatus) {
-      yield put(resetPasswordSuccess("success"));
-    } else {
-      yield put(resetPasswordError(resetPasswordStatus.message));
+    // We call the `authorize` task with the data, telling it that we are registering a user
+    // This returns `true` if the registering was successful, `false` if not
+    const wasSuccessful = yield call(register, {
+      name: user.name,
+      username: user.username,
+      password: user.password,
+      email: user.email,
+    });
+    // If we could register a user, we send the appropiate actions
+    if (wasSuccessful) {
+      history.push("/user");
     }
-  } catch (error) {
-    yield put(resetPasswordError(error));
   }
 }
 
 export default function* rootSaga() {
   yield all([
     fork(watchLoginUser),
-    fork(watchLogoutUser),
-    fork(watchRegisterUser),
+    // fork(watchRegisterUser),
     fork(watchForgotPassword),
-    fork(watchResetPassword),
     fork(watchGetUserInfor),
+    fork(registerFlow),
   ]);
 }
 

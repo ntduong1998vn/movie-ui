@@ -61,6 +61,7 @@ export const registerUser = (user, history) => ({
   type: REGISTER_USER,
   payload: { user, history },
 });
+
 export const registerUserSuccess = (user) => ({
   type: REGISTER_USER_SUCCESS,
   payload: user,
@@ -70,9 +71,8 @@ export const registerUserError = (message) => ({
   payload: { message },
 });
 
-export const logoutUser = (history) => ({
+export const logoutUser = () => ({
   type: LOGOUT_USER,
-  payload: { history },
 });
 
 export const getUserInfor = () => ({

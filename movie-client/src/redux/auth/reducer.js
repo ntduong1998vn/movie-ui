@@ -12,7 +12,9 @@ import {
   RESET_PASSWORD,
   RESET_PASSWORD_SUCCESS,
   RESET_PASSWORD_ERROR,
+  GET_USER_SUCCESS,
 } from "../actions";
+import { ACCESS_TOKEN } from "../../constants/auth";
 
 const INIT_STATE = {
   user: localStorage.getItem("user_id"),
@@ -29,13 +31,25 @@ export default (state = INIT_STATE, action) => {
     case LOGIN_USER:
       return { ...state, loading: true, error: "" };
     case LOGIN_USER_SUCCESS:
-      return { ...state, loading: false, user: action.payload, error: "",isAuth:true };
+      return {
+        ...state,
+        loading: false,
+        user: action.payload,
+        error: "",
+        isAuth: true,
+      };
     case LOGIN_USER_ERROR:
       return {
         ...state,
         loading: false,
         user: "",
         error: action.payload.message,
+      };
+    case GET_USER_SUCCESS:
+      return {
+        ...state,
+        user: action.payload,
+        isAuth: true,
       };
     case FORGOT_PASSWORD:
       return { ...state, loading: true, error: "" };
@@ -83,7 +97,8 @@ export default (state = INIT_STATE, action) => {
         error: action.payload.message,
       };
     case LOGOUT_USER:
-      return { ...state, user: null, error: "" };
+      localStorage.removeItem(ACCESS_TOKEN);
+      return { ...state, user: null, error: "", isAuth: false };
     default:
       return { ...state };
   }
