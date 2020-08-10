@@ -8,6 +8,8 @@ import reviewSaga from "./review/saga";
 import episodeSaga from "./episode/saga";
 import userSaga from "./user/saga";
 import authSagas from "./auth/saga";
+import surveySaga from "./surveyList/saga";
+import surveyDetailSagas from './surveyDetail/saga';
 
 export default function* rootSaga(getState) {
   yield all([
@@ -20,5 +22,7 @@ export default function* rootSaga(getState) {
     episodeSaga(),
     userSaga(),
     authSagas(),
+    surveySaga(),
+    surveyDetailSagas()
   ]);
 }

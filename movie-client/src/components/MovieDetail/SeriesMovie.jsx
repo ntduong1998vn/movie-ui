@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCookie } from "react";
+import React, { useEffect, useState } from "react";
 // import PlyrPlayer from "../../PlyrPlayer";
 import { Row } from "react-bootstrap";
 import DetailCard from "../DetailCard";
@@ -8,12 +8,18 @@ import { getEpisodeByID } from "../../redux/episode/actions";
 import { connect } from "react-redux";
 
 import VideoPlayer from "../Player/VideoJS";
+import '../../assets/css/button.css';
+import 'react-responsive-modal/styles.css';
+import { Modal } from 'react-responsive-modal';
+
 var playTime = 0;
 
 function SeriesMovie({ movie, episodes, sources, ...props }) {
   const [labelServer, setLabelServer] = useState([]);
   const [soucreVideo, setSoucreVideo] = useState([]);
   const [activeLabel, setActiveLabel] = useState([]);
+  const [showModal, setShowModal] = useState(true);
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     handleEpisodeClick(1, movie.id)
@@ -97,34 +103,50 @@ function SeriesMovie({ movie, episodes, sources, ...props }) {
     playTime = parseFloat(localStorage.getItem("playtime"));
     // console.log(playTime)
   }
-  useEffect(() => {
-    setTimeout(() => { checkCookie() }, 50)
-  })
+  // useEffect(() => {
+  //   setTimeout(() => { checkCookie() }, 50)
+  // })\
 
-  // console.log(soucreVideo)
+  function onCloseModal() {
+    setShowModal(false)
+  }
+  function getCurrentTime() {
+    console.log("Có xem");
+    onCloseModal();
+  }
 
-  // let src = [
-  //   {
-  //     src: "http://media.w3.org/2010/05/video/movie_300.webm",
-  //     type: "video/webm",
-  //     label: "720P",
-  //   },
-  //   {
-  //     src: "http://media.w3.org/2010/05/video/movie_300.webm",
-  //     type: "video/webm",
-  //     label: "360P",
-  //   },
-  // ]
+  function onOpenModal() {
+    //Condition for open Modal
 
-
+    setShowModal(true)
+  }
+  // console.log(showModal)
+  function changeStatusLike() {
+    setLiked(!liked)
+  }
+  console.log(liked)
   return (
     <section className="section details">
       {/* <!-- details background --> */}
+      {showModal === false ? (
+        null
+      ) : (
+          <Modal open={showModal} center onClose={onCloseModal}>
+            <h3>Thông báo</h3>
+            <p>Bạn đã xem phim tại</p>
+            <p> Bạn có muốn tiếp tục xem không?</p>
+            <button type="button" class="button1" onClick={() => getCurrentTime()}>Có</button>
+            <button type="button" class="button2" onClick={() => onCloseModal()}>Không</button>
+          </Modal>
+        )
+      }
       <div className="details__bg" data-bg="img/home/home__bg.jpg"></div>
       {/* <!-- end details background --> */}
+
       <div className="container">
         <Row>
           <DetailCard single={false} movie={movie} />
+
           <div className="col-12 ">
 
             <VideoPlayer src={soucreVideo} />
@@ -200,9 +222,48 @@ function SeriesMovie({ movie, episodes, sources, ...props }) {
               </div>
             </div>
           </div>
+          <div className="col-12">
+            <div
+              className="details__share"
+              style={{ flexDirection: "row", display: "flex" }}
+            >
+              <span
+                className="details__share-title"
+                style={{ paddingTop: "35px" }}
+              >
+                Yêu thích bộ phim:
+              </span>
+              {liked === false ? (
+                <button
+                  type="button"
+                  className="form__btn"
+                  style={{
+                    width: "150px",
+                    marginRight: "15px",
+                    marginLeft: "15px",
+                  }}
+                  onClick={() => changeStatusLike()}>
+                  Yêu thích
+                </button>
+              ) : (
+                  <button type="button"
+                    className="form__btn"
+                    style={{
+                      width: "150px",
+                      marginRight: "15px",
+                      marginLeft: "15px",
+                    }}
+                    onClick={() => changeStatusLike()}>
+                    Bỏ yêu thích
+                  </button>
+                )
+              }
+            </div>
+          </div>
         </Row>
+
       </div>
-    </section>
+    </section >
   );
 }
 const mapStateToProps = ({ episodeData, movieData }) => {

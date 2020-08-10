@@ -10,9 +10,9 @@ const MovieDetail = React.lazy(() =>
 const MovieForm = React.lazy(() =>
     import(/* webpackChunkName: "forms-validations" */ './validations')
 );
-// const Details = React.lazy(() =>
-//     import(/* webpackChunkName: "detail"*/ './details')
-// )
+const EpisodeList = React.lazy(() =>
+    import(/* webpackChunkName: "forms-validations" */ './episode')
+)
 
 function MoviePages({ match }) {
     return (
@@ -28,13 +28,13 @@ function MoviePages({ match }) {
                     render={props => <MovieForm {...props} />}
                 />
                 <Route
+                    path={`${match.url}/episode-list`}
+                    render={props => <EpisodeList {...props} />}
+                />
+                <Route
                     path={`${match.url}/:id`}
                     render={props => <MovieDetail {...props} />}
                 />
-                {/* <Route
-                    path={`${match.url}/details-alt`}
-                    render={props => <DetailsAlt {...props} />}
-                /> */}
                 <Redirect to="/error" />
             </Switch>
         </Suspense>
