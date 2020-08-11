@@ -20,3 +20,4 @@ export const apiMovie = serverPath + "/api/movie";
 export const apiComment = serverPath + "/api/comment";
 export const apiReview = serverPath + "/api/reviews";
 export const apiEpisode = serverPath + "/api/episode";
+export const apiFavorite = serverPath + "/api/favorite";
