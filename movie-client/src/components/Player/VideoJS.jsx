@@ -126,8 +126,7 @@ const options = {
   playbackRates: [0.5, 1, 1.5, 2],
 };
 
-const usePlayer = ({ src, controls, autoplay }) => {
-
+const usePlayer = ({ src, controls, autoplay, lastTime }) => {
   const videoRef = useRef(null);
   const [player, setPlayer] = useState(null);
   const [currentTime, setCurrentTime] = useState(null);
@@ -142,10 +141,12 @@ const usePlayer = ({ src, controls, autoplay }) => {
     /**
      * Add handle event
      **/
+    vjsPlayer.buffered(50)
+
     vjsPlayer.on("timeupdate", function () {
-        setCurrentTime(vjsPlayer.currentTime());
+      setCurrentTime(vjsPlayer.currentTime());
     });
-    handleAds(vjsPlayer);
+    // handleAds(vjsPlayer);
     vjsPlayer.on("adtimeupdate", function () {
       var player = this;
       // console.log(player.ads.skipLinearAdMode());
@@ -166,6 +167,15 @@ const usePlayer = ({ src, controls, autoplay }) => {
     }
 
   }, [src]);
+
+  useEffect(() => {
+    // console.log(lastTime)
+    if (player !== null) {
+      if (lastTime !== undefined && lastTime !== 0) {
+        player.currentTime(lastTime);
+      }
+    }
+  }, [lastTime,player]);
 
   function handleAds(player) {
     player.ads({
@@ -202,17 +212,17 @@ const usePlayer = ({ src, controls, autoplay }) => {
 
   //set currentTime to localStorage
   let d = new Date();
-  d.setTime(d.getTime()+( 24 * 60 * 60 * 1000));
-  let expires = "expires="+d.toUTCString();
+  d.setTime(d.getTime() + (24 * 60 * 60 * 1000));
+  let expires = "expires=" + d.toUTCString();
+  // console.log(currentTime)
   document.cookie = "Play time=" + currentTime + "; expires=" + expires;
+  localStorage.setItem("playtime", currentTime);
 
-  localStorage.setItem("playtime",currentTime);
-  
   return videoRef;
 };
 
-const VideoPlayer = ({ src, controls, autoplay }) => {
-  const playerRef = usePlayer({ src, controls, autoplay });
+const VideoPlayer = ({ src, controls, autoplay,lastTime}) => {
+  const playerRef = usePlayer({ src, controls, autoplay,lastTime });
   return (
     <div data-vjs-player>
       <video ref={playerRef} className="video-js vjs-big-play-centered" />
@@ -228,7 +238,7 @@ VideoPlayer.propTypes = {
 
 VideoPlayer.defaultProps = {
   controls: true,
-  autoplay: false,
+  autoplay: true,
 };
 
 export default VideoPlayer;

@@ -9,7 +9,7 @@ import {
 const INIT_STATE = {
   items: [],
   isLoading: true,
-  error: '',
+  error: null,
   totalPages: 1,
   totalItemCount: 0,
 };
@@ -17,12 +17,12 @@ const INIT_STATE = {
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
     case GET_ACTOR:
-      return { ...state, isLoading: true, error: '', items: [] };
+      return { ...state, isLoading: true, error: null, items: [] };
     case GET_ACTOR_SUCCESS:
       // console.log(action)
       return {
         ...state, isLoading: false, items: action.payload.content,
-        totalPages: action.payload.totalPages, totalItemCount: action.payload.totalElements, error: ''
+        totalPages: action.payload.totalPages, totalItemCount: action.payload.totalElements, error: null
       }
     case GET_ACTOR_ERROR:
       return { ...state, isLoading: false, items: [], error: action.payload.message }
@@ -30,21 +30,21 @@ export default (state = INIT_STATE, action) => {
       return { ...state, isLoading: false, error: '' }
     case ADD_ACTOR_SUCCESS:
       console.log(action)
-      return { ...state, isLoading: false, error: '' };
+      return { ...state, isLoading: false, error: null };
     case ADD_ACTOR_ERROR:
       return { ...state, isLoading: false, error: action.payload.message }
     case EDIT_ACTOR:
       return { ...state, isLoading: false, error: '' }
     case EDIT_ACTOR_SUCCESS:
       console.log(action)
-      return { ...state, isLoading: false, error: '' }
+      return { ...state, isLoading: false, error: null }
     case EDIT_ACTOR_ERROR:
       return { ...state, isLoading: false, error: action.payload.message }
     case DELETE_ACTOR:
       return { ...state, isLoading: false, error: '' }
     case DELETE_ACTOR_SUCCESS:
       console.log(action)
-      return { ...state, isLoading: false, error: '' }
+      return { ...state, isLoading: false, error: null }
     case DELETE_ACTOR_ERROR:
       return { ...state, isLoading: false, error: action.payload.message }
     default:

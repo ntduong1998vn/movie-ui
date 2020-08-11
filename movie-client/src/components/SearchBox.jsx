@@ -6,9 +6,10 @@ function SearchBox(props) {
     const [searchTerm, setSearchTerm] = useState("");
   
     function handleSubmit(e) {
-        console.log("submit")
+        // console.log("submit")
         e.preventDefault();
         props.history.push({ pathname: `/tim-kiem?title=${searchTerm}` });
+        console.log(props)
     }
 
     function handleChange(e) {
