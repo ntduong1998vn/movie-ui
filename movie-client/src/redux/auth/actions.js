@@ -14,6 +14,9 @@ import {
   RESET_PASSWORD_ERROR,
   GET_USER,
   GET_USER_SUCCESS,
+  GET_FAVORITE_LIST_BY_USER_ID,
+  GET_FAVORITE_LIST_BY_USER_ID_SUCCESS,
+  GET_FAVORITE_LIST_BY_USER_ID_ERROR
 } from "../actions";
 
 export const loginUser = (user, history) => ({
@@ -83,4 +86,19 @@ export const getUserInfor = () => ({
 export const getUserSuccess = (user) => ({
   type: GET_USER_SUCCESS,
   payload: user,
+});
+
+export const getFavoriteListByUserID = (id) => ({
+  type: GET_FAVORITE_LIST_BY_USER_ID,
+  payload: id
+});
+
+export const getFavoriteListByUserIDSuccess = (favorite) => ({
+  type: GET_FAVORITE_LIST_BY_USER_ID_SUCCESS,
+  payload: favorite
+});
+
+export const getFavoriteListByUserIDError = (message) => ({
+  type: GET_FAVORITE_LIST_BY_USER_ID_ERROR,
+  payload: message
 });

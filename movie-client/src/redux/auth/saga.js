@@ -13,19 +13,26 @@ import {
   register,
 } from "./../../repository/AuthAPI";
 
+import {queryListFavorites} from "./../../repository/favorite";
+
 import {
   LOGIN_USER,
   REGISTER_USER,
   FORGOT_PASSWORD,
   GET_USER,
-  GET_USER_SUCCESS,
+  GET_USER_SUCCESS,  
+  GET_FAVORITE_LIST_BY_USER_ID,
+  GET_FAVORITE_LIST_BY_USER_ID_SUCCESS,
+  GET_FAVORITE_LIST_BY_USER_ID_ERROR
 } from "../actions";
 
 import {
   loginUserSuccess,
   loginUserError,
   registerUserSuccess,
-  registerUserError,
+  registerUserError, 
+  getFavoriteListByUserIDSuccess,
+  getFavoriteListByUserIDError,
   forgotPasswordSuccess,
   forgotPasswordError,
   getUserSuccess,
@@ -147,12 +154,31 @@ export function* registerFlow() {
   }
 }
 
+export function* watchFavoriteListByUserID() {
+  yield takeLatest(GET_FAVORITE_LIST_BY_USER_ID, handleGetFavoriteListByUserID);
+}
+
+function* handleGetFavoriteListByUserID({ payload }) {
+  const id = payload;
+  try {
+    const user = yield call(queryListFavorites, id);
+    if (!user.message) {
+      yield put(getFavoriteListByUserIDSuccess(user.result));
+    } else {
+      yield put(getFavoriteListByUserIDError(user.message));
+    }
+  } catch (error) {
+    yield put(getFavoriteListByUserIDError(error));
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     fork(watchLoginUser),
     // fork(watchRegisterUser),
     fork(watchForgotPassword),
     fork(watchGetUserInfor),
+    fork(watchFavoriteListByUserID),
     fork(registerFlow),
   ]);
 }

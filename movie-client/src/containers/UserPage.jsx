@@ -8,8 +8,25 @@ import UserChangePasswordForm from "../components/User/UserChangePasswordForm";
 import { connect } from "react-redux";
 import UserApi from "../repository/UserAPI";
 import { logoutUser } from "../redux/actions";
+import { getFavoriteListByUserID } from "../redux/auth/actions"
+import ReactTable from 'react-table-v6'
+import 'react-table-v6/react-table.css'
+
 function UserPage(props) {
   const [key, setKey] = useState("profile");
+  const { favorite } = props;
+  const columns = [{
+    Header: 'Tên Phim',
+    accessor: 'movie_name' // String-based value accessors!
+  }, {
+    Header: 'Current Time',
+    accessor: 'current_time',
+    Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
+  }]
+
+  React.useEffect(() => {
+    getFavoriteList();
+  }, [])
 
   function onSubmitBasicForm(form) {
     console.log(form);
@@ -26,6 +43,11 @@ function UserPage(props) {
   function logOut() {
     props.logoutUser();
   }
+
+  function getFavoriteList() {
+    props.getFavoriteListByUserID(props.user.id)
+  }
+  console.log(favorite)
   return (
     <Fragment>
       <PageTitle title="Thông tin cá nhân" location="Thông tin cá nhân" />
@@ -66,6 +88,11 @@ function UserPage(props) {
                       <Nav.Item>
                         <Nav.Link eventKey="subscription">
                           Subscription
+                        </Nav.Link>
+                      </Nav.Item>
+                      <Nav.Item>
+                        <Nav.Link eventKey="favorite">
+                          Favorite
                         </Nav.Link>
                       </Nav.Item>
                     </Nav>
@@ -118,6 +145,19 @@ function UserPage(props) {
                               aria-selected="false"
                             >
                               Subscription
+                            </a>
+                          </li>
+                          <li className="nav-item">
+                            <a
+                              className="nav-link"
+                              id="3-tab"
+                              data-toggle="tab"
+                              href="#tab-3"
+                              role="tab"
+                              aria-controls="tab-3"
+                              aria-selected="false"
+                            >
+                              Favorite
                             </a>
                           </li>
                         </ul>
@@ -243,6 +283,20 @@ function UserPage(props) {
                   {/* <!-- end price --> */}
                 </Row>
               </Tab.Pane>
+
+              <Tab.Pane eventKey="favorite">
+                <Row>
+                  <div className="col-12 ">
+                    <ReactTable
+                      data={favorite}
+                      columns={columns}
+                      style={{backgroundColor:'#28282d', color:'rgba(255, 255, 255, 0.7)'}}
+                    />
+                  </div>
+
+                </Row>
+              </Tab.Pane>
+
             </Tab.Content>
             {/* <!-- end content tabs --> */}
           </div>
@@ -252,7 +306,7 @@ function UserPage(props) {
   );
 }
 const mapStateToProps = ({ authUser }) => {
-  const { user, loading, error } = authUser;
-  return { user, loading, error };
+  const { user, loading, error, favorite } = authUser;
+  return { user, loading, error, favorite };
 };
-export default connect(mapStateToProps, { logoutUser })(UserPage);
+export default connect(mapStateToProps, { logoutUser, getFavoriteListByUserID })(UserPage);
