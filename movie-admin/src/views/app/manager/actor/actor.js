@@ -264,7 +264,7 @@ class Actor extends Component {
     const { error } = this.props;
     let id = actorForm.id;
     this.props.deleteActor(id)
-    if (error !== null) {
+    if (error === null) {
       this.createNotification("delete success", "filled");
       setTimeout(() => { this.dataListRender() }, 500)
     }
@@ -293,14 +293,21 @@ class Actor extends Component {
     }
 
     this.props.addActor(formSubmit)
-    if(error!==)
-    setTimeout(() => { this.toggleModal() }, 500)
-    setTimeout(() => { this.dataListRender() }, 500)
+    if (error === null) {
+      this.createNotification("add success", "filled");
+      setTimeout(() => { this.toggleModal() }, 500)
+      setTimeout(() => { this.dataListRender() }, 500)
+    }
+    else {
+      this.toggleModal()
+      this.createNotification("add error", "filled");
+    }
   }
 
   handleEditSubmit = e => {
     console.log("submit")
     const { actorForm, image } = this.state;
+    const { error } = this.props;
     console.log(image);
     const formSubmit = new FormData();
     formSubmit.append('id', actorForm.id);
@@ -310,8 +317,15 @@ class Actor extends Component {
       formSubmit.append('image', image);
     }
     this.props.editActor(actorForm.id, formSubmit)
-    setTimeout(() => { this.toggleEditModal() }, 1000)
-    setTimeout(() => { this.dataListRender() }, 1000)
+    if (error === null) {
+      this.createNotification("edit success", "filled");
+      setTimeout(() => { this.toggleEditModal() }, 1500)
+      setTimeout(() => { this.dataListRender() }, 1500)
+    }
+    else {
+      this.toggleEditModal()
+      this.createNotification("edit error", "filled");
+    }
   }
 
   onContextMenuClick = (e, data, target) => {
@@ -345,82 +359,81 @@ class Actor extends Component {
   };
   createNotification = (type, className) => {
     let cName = className || "";
-    return () => {
-      switch (type) {
-        case "add success":
-          NotificationManager.success(
-            "Thêm thành công",
-            "Thông báo",
-            3000,
-            null,
-            null,
-            cName
-          );
-          break;
-        case "edit success":
-          NotificationManager.success(
-            "Thêm thành công",
-            "Thông báo",
-            3000,
-            null,
-            null,
-            cName
-          );
-          break;
-        case "delete success":
-          NotificationManager.success(
-            "Xóa thành công",
-            "Thông báo",
-            3000,
-            null,
-            null,
-            cName
-          );
-          break;
-        case 'warning':
-          NotificationManager.warning(
-            "Chỉ được chọn 1 để sửa",
-            "Thông báo",
-            3000,
-            null,
-            null,
-            cName
-          );
-          break;
-        case "add error":
-          NotificationManager.error(
-            "Thêm thất bại",
-            "Thông báo",
-            5000,
-            null,
-            null,
-            cName
-          );
-          break;
-        case "edit error":
-          NotificationManager.error(
-            "Sửa thất bại",
-            "Thông báo",
-            3000,
-            null,
-            null,
-            cName
-          );
-          break;
-        case "delete error":
-          NotificationManager.error(
-            "Xóa thất bại",
-            "Thông báo",
-            3000,
-            null,
-            null,
-            cName
-          );
-          break;
-        default:
-          NotificationManager.info("Info message");
-          break;
-      }
+    switch (type) {
+      case "add success":
+        NotificationManager.success(
+          "Thêm thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit success":
+        NotificationManager.success(
+          "Sửa thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete success":
+        NotificationManager.success(
+          "Xóa thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case 'warning':
+        NotificationManager.warning(
+          "Chỉ được chọn 1 để sửa",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "add error":
+        NotificationManager.error(
+          "Thêm thất bại",
+          "Thông báo",
+          5000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit error":
+        NotificationManager.error(
+          "Sửa thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete error":
+        NotificationManager.error(
+          "Xóa thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      default:
+        NotificationManager.info("Info message");
+        break;
+
     }
   }
   render() {
