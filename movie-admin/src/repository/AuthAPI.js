@@ -15,6 +15,13 @@ export async function loginWithEmailPasswordAsync(email, password) {
     .catch((error) => error.response.data);
 }
 
+export async function getCurrentUser() {
+  return await axios
+    .get("/api/user/me")
+    .then((res) => res.data)
+    .catch((error) => error.response.data);
+}
+
 // export function getCurrentUser() {
 //   if (!localStorage.getItem(ACCESS_TOKEN)) {
 //     return Promise.reject("No access token set.");

@@ -3,6 +3,8 @@ import {
   LOGIN_USER_SUCCESS,
   LOGOUT_USER,
   LOGIN_USER_ERROR,
+  GET_CURRENT_USER,
+  GET_USER_SUCCESS,
 } from "../actions";
 
 export const loginUser = (user, history) => ({
@@ -23,4 +25,13 @@ export const loginUserError = (message) => ({
 export const logoutUser = (history) => ({
   type: LOGOUT_USER,
   payload: { history },
+});
+
+export const getCurrentUser = (history) => ({
+  type: GET_CURRENT_USER,
+  payload: history,
+});
+export const getUserSuccess = (user) => ({
+  type: GET_USER_SUCCESS,
+  payload: user,
 });

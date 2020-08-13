@@ -5,6 +5,7 @@ import {
   Route,
   Switch,
   Redirect,
+  withRouter,
 } from "react-router-dom";
 import { IntlProvider } from "react-intl";
 import AppLocale from "./lang";
@@ -14,6 +15,7 @@ import NotificationContainer from "./components/common/react-notifications/Notif
 import { isMultiColorActive } from "./constants/defaultValues";
 import { getDirection } from "./helpers/Utils";
 import { AuthRoute } from "./components/AuthRoute";
+import { getCurrentUser } from "./redux/actions";
 
 const ViewMain = React.lazy(() =>
   import(/* webpackChunkName: "views" */ "./views")
@@ -42,11 +44,16 @@ class App extends Component {
       document.body.classList.remove("rtl");
     }
   }
+  componentDidMount() {
+    this.props.getCurrentUser(this.props.history);
+  }
 
+  // componentDidUpdate() {
+  //   this.props.getCurrentUser();
+  // }
   render() {
     const { locale, loginUser } = this.props;
     const currentAppLocale = AppLocale[locale];
-
     return (
       <div className="h-100">
         <IntlProvider
@@ -57,39 +64,32 @@ class App extends Component {
             <NotificationContainer />
             {isMultiColorActive && <ColorSwitcher />}
             <Suspense fallback={<div className="loading" />}>
-              <Router>
-                <Switch>
-                  <AuthRoute
-                    path="/app"
-                    authUser={loginUser}
-                    component={ViewApp}
-                  />
-                  <Route
-                    path="/error"
-                    exact
-                    render={(props) => <ViewError {...props} />}
-                  />
-                  <Route
-                    path="/user"
-                    render={(props) => <ViewUser {...props} />}
-                  />
-                  <Route
-                    path="/"
-                    exact
-                    render={(props) => <ViewMain {...props} />}
-                  />
-
-                  <Route
-                    path="/survey"
-                    render={(props) => <ViewSurvey {...props} />}
-                  />
-                  <Route
-                    path="/oauth2/redirect"
-                    component={OAuth2RedirectHandler}
-                  />
-                  <Redirect to="/error" />
-                </Switch>
-              </Router>
+              <Switch>
+                <AuthRoute
+                  path="/app"
+                  authUser={loginUser}
+                  component={ViewApp}
+                />
+                <Route
+                  path="/error"
+                  exact
+                  render={(props) => <ViewError {...props} />}
+                />
+                <Route
+                  path="/user"
+                  render={(props) => <ViewUser {...props} />}
+                />
+                <Route
+                  path="/"
+                  exact
+                  render={(props) => <ViewMain {...props} />}
+                />
+                <Route
+                  path="/oauth2/redirect"
+                  component={OAuth2RedirectHandler}
+                />
+                <Redirect to="/error" />
+              </Switch>
             </Suspense>
           </React.Fragment>
         </IntlProvider>
@@ -103,6 +103,5 @@ const mapStateToProps = ({ authUser, settings }) => {
   const { locale } = settings;
   return { loginUser, locale };
 };
-const mapActionsToProps = {};
-
-export default connect(mapStateToProps, mapActionsToProps)(App);
+const AppWithRouter = withRouter(App);
+export default connect(mapStateToProps, { getCurrentUser })(AppWithRouter);
