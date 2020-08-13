@@ -21,7 +21,7 @@ function ReviewList({ movieId, reviews, ...props }) {
       id: 0,
       movie_id: 0,
       user_id: 0,
-      score: 0,
+      score: 0, 
     }
     const {user} = props;
     // console.log(reviewRate)

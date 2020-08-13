@@ -1,6 +1,9 @@
 import React from "react";
 
-export default function PriceCard({ id, title, price, ...options }) {
+function PriceCard({ user,id, title, price, ...options }) {
+  function handleUpdateVip(){
+    // console.log(user)
+  }
   return (
     <div className="col-12 col-md-6 col-lg-4">
       <div className="price">
@@ -25,10 +28,12 @@ export default function PriceCard({ id, title, price, ...options }) {
             );
           }
         })}
-        <a href="#" className="price__btn">
+        <button onClick={() => handleUpdateVip()} className="price__btn">
           Thanh Toán
-        </a>
+        </button>
       </div>
     </div>
   );
 }
+export default PriceCard
+

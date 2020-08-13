@@ -83,8 +83,10 @@ function UserPage(props) {
   function onCloseModal() {
     setShowModal(false);
   }
-
-  console.log(favorite)
+  function handleUpdateVip() {
+    UserApi.updateVip()
+  }
+  // console.log(favorite)
   return (
     <Fragment>
       <Modal open={showModal} center onClose={onCloseModal}>
@@ -92,7 +94,7 @@ function UserPage(props) {
         <p> {message}</p>
         <button
           type="button"
-          style={{marginLeft: '35px'}}
+          style={{ marginLeft: '35px' }}
           class="form__btn"
           onClick={() => onCloseModal()}>OK</button>
       </Modal>
@@ -265,9 +267,9 @@ function UserPage(props) {
                       <div className="price__item">
                         <span>Limited Support</span>
                       </div>
-                      <a href="#" className="price__btn">
+                      <button onClick={() => handleUpdateVip()} className="price__btn">
                         Choose Plan
-                      </a>
+                      </button>
                     </div>
                   </div>
                   {/* <!-- end price --> */}
@@ -293,9 +295,9 @@ function UserPage(props) {
                       <div className="price__item">
                         <span>24/7 Support</span>
                       </div>
-                      <a href="#" className="price__btn">
+                      <button onClick={() => handleUpdateVip()} className="price__btn">
                         Choose Plan
-                      </a>
+                      </button>
                     </div>
                   </div>
                   {/* <!-- end price --> */}
@@ -321,9 +323,9 @@ function UserPage(props) {
                       <div className="price__item">
                         <span>24/7 Support</span>
                       </div>
-                      <a href="#" className="price__btn">
+                      <button onClick={() => handleUpdateVip()} className="price__btn">
                         Choose Plan
-                      </a>
+                      </button>
                     </div>
                   </div>
                   {/* <!-- end price --> */}
