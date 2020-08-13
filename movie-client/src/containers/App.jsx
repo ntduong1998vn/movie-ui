@@ -20,11 +20,14 @@ import OAuth2RedirectHandler from "../components/Common/OAuth2RedirectHandler";
 const App = (props) => {
   useEffect(() => {
     console.log(localStorage.getItem(ACCESS_TOKEN));
-    if (localStorage.getItem(ACCESS_TOKEN) !== null) {
+    if (
+      localStorage.getItem(ACCESS_TOKEN) !== null &&
+      localStorage.getItem(ACCESS_TOKEN) != ""
+    ) {
       console.log("Load User");
       props.getUserInfor();
     }
-    return () => { };
+    return () => {};
   }, []);
   return (
     <React.Fragment>
@@ -34,7 +37,7 @@ const App = (props) => {
         {/* localhost/tim-kiem?genre=Action+Romance&title=Duong&.... */}
         <Route
           path="/tim-kiem/"
-          render={props => <CatalogPage {...props} />}
+          render={(props) => <CatalogPage {...props} />}
         />
         <Route
           path="/movie/:id"
@@ -66,10 +69,7 @@ const App = (props) => {
         {/* <Route path="/genre/:type/:page" component={CatalogPage} /> */}
         {/* <Route path="/genre/:id" component={GenrePage} /> */}
         <Route component={ErrorPage} />
-        <Route
-          path="/oauth2/redirect"
-          component={OAuth2RedirectHandler}
-        />
+        <Route path="/oauth2/redirect" component={OAuth2RedirectHandler} />
       </Switch>
       <Footer />
     </React.Fragment>
