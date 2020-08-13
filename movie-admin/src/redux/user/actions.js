@@ -3,8 +3,6 @@ import {
     GET_USER_SUCCESS, GET_USER_ERROR,
     GET_FAVORITE_LIST_BY_USER_ID_SUCCESS, GET_FAVORITE_LIST_BY_USER_ID_ERROR,
     EDIT_USER_SUCCESS, EDIT_USER_ERROR,
-    DELETE_USER_SUCCESS, DELETE_USER_ERROR, DELETE_USER_QUESTION,
-
 } from "../actions";
 
 export const getListUsers = (selectedPageSize, currentPage, selectedOrderOption, search) => ({

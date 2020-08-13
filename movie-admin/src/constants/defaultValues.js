@@ -46,7 +46,7 @@ export const isDarkSwitchActive = true;
 export const defaultColor = "light.purple";
 export const defaultDirection = "ltr";
 export const themeRadiusStorageKey = "__theme_radius";
-export const isDemo = true;
+export const isDemo = false;
 export const DEFAULT_IMAGE = "http://via.placeholder.com/92x136";
 export const FIREBASE_PATH = "gs://movie-app-d4c77.appspot.com";
 
