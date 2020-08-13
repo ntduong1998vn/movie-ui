@@ -7,7 +7,7 @@ import * as yup from "yup";
 import { connect } from "react-redux";
 import { loginUser } from "../redux/actions";
 import { Link } from "react-router-dom";
-
+import { FACEBOOK_AUTH_URL, GOOGLE_AUTH_URL } from "../constants/auth";
 const SignInSchema = yup.object().shape({
   username: yup
     .string()
@@ -97,6 +97,18 @@ function SignIn(props) {
                   <span className="sign__text">
                     Không có tài khoản? <Link to="register">Đăng ký!</Link>
                   </span>
+                  <a
+                    className="loginBtn loginBtn--google"
+                    href={GOOGLE_AUTH_URL}
+                  >
+                    Login with Google
+                  </a>
+                  <a
+                    className="loginBtn loginBtn--facebook"
+                    href={FACEBOOK_AUTH_URL}
+                  >
+                    Login with Facebook
+                  </a>
 
                   <span className="sign__text">
                     <a href="#">Quên mật khẩu?</a>

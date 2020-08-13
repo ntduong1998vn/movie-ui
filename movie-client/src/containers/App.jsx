@@ -16,8 +16,10 @@ import PrivateRoute from "../components/Common/PrivateRoute";
 import RestrictedRoute from "../components/Common/RestrictedRoute";
 import { ACCESS_TOKEN } from "../constants/auth";
 import { getUserInfor } from "../redux/actions";
+import OAuth2RedirectHandler from "../components/Common/OAuth2RedirectHandler";
 const App = (props) => {
   useEffect(() => {
+    console.log(localStorage.getItem(ACCESS_TOKEN));
     if (localStorage.getItem(ACCESS_TOKEN) !== null) {
       console.log("Load User");
       props.getUserInfor();
@@ -64,6 +66,7 @@ const App = (props) => {
           // render={(props) => <UserPage {...props} />}
           component={UserPage}
         />
+        <Route path="/oauth2/redirect" component={OAuth2RedirectHandler} />
         {/* <Route path="/genre/:type/:page" component={CatalogPage} /> */}
         {/* <Route path="/genre/:id" component={GenrePage} /> */}
         <Route component={ErrorPage} />
