@@ -24,7 +24,7 @@ const App = (props) => {
       console.log("Load User");
       props.getUserInfor();
     }
-    return () => {};
+    return () => { };
   }, []);
   return (
     <React.Fragment>
@@ -33,13 +33,13 @@ const App = (props) => {
         <Route path="/" component={HomePage} exact />
         {/* localhost/tim-kiem?genre=Action+Romance&title=Duong&.... */}
         <Route
-          path="/genre/:id/:page"
+          path="/genre/"
           render={(props) => <CatalogPage {...props} />}
         />
-        {/* <Route
-          path="/timkiem?title=:searchTerm"
+        <Route
+          path="/tim-kiem"
           render={props => <CatalogPage {...props} />}
-        /> */}
+        />
         <Route
           path="/movie/:id"
           render={(props) => <MoveDetailPage {...props} />}
@@ -70,6 +70,10 @@ const App = (props) => {
         {/* <Route path="/genre/:type/:page" component={CatalogPage} /> */}
         {/* <Route path="/genre/:id" component={GenrePage} /> */}
         <Route component={ErrorPage} />
+        <Route
+          path="/oauth2/redirect"
+          component={OAuth2RedirectHandler}
+        />
       </Switch>
       <Footer />
     </React.Fragment>

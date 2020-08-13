@@ -14,7 +14,7 @@ function CatalogList(props ) {
   }, []);
 
   function fetchData(currentPage) {
-    props.getMovieByGenre(2, currentPage)
+    props.getMovieByGenre(6, currentPage)
   }
   function onChangePage(page) {
     setCurrentPage(page);

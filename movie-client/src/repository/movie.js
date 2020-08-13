@@ -1,5 +1,5 @@
 import { apiMovie } from '../constants/const'
-import axios from "axios";
+import axios from "../helpers/axios.instance";
 
 export const queryListMovies = async (selectedPageSize, currentPage, selectedOrderOption, search) => {
     return await axios
