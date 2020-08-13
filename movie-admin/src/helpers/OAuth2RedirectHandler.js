@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-// import { getCurrentUserInfor } from "../redux/actions";
+import { getCurrentUserInfor } from "../redux/actions";
 class OAuth2RedirectHandler extends Component {
   getUrlParameter(name) {
     name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
@@ -16,6 +16,7 @@ class OAuth2RedirectHandler extends Component {
   render() {
     const token = this.getUrlParameter("token");
     const error = this.getUrlParameter("error");
+    console.log(token);
     // this.props.getCurrentUserInfor(token, this.props.history);
     return <div>Loading...</div>;
     // if (token) {

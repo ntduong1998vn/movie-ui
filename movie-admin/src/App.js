@@ -29,7 +29,7 @@ const ViewUser = React.lazy(() =>
 );
 const ViewSurvey = React.lazy(() =>
   import(/* webpackChunkName: "views-survey" */ "./views/survey")
-)
+);
 class App extends Component {
   constructor(props) {
     super(props);
@@ -79,8 +79,14 @@ class App extends Component {
                     render={(props) => <ViewMain {...props} />}
                   />
 
-                  <Route path="/survey" render={(props) => <ViewSurvey {...props} />} />
-                  
+                  <Route
+                    path="/survey"
+                    render={(props) => <ViewSurvey {...props} />}
+                  />
+                  <Route
+                    path="/oauth2/redirect"
+                    component={OAuth2RedirectHandler}
+                  />
                   <Redirect to="/error" />
                 </Switch>
               </Router>
