@@ -3,7 +3,10 @@ import PageTitle from "../components/PageTitle";
 import PriceCard from "../components/PriceCard";
 import Features from "../components/Features/Features";
 
-function PaidPage() {
+import {connect} from "react-redux";
+import {withRouter} from "react-router-dom";
+
+function PaidPage(props) {
   const priceCards = [
     {
       id: 1,
@@ -68,7 +71,7 @@ function PaidPage() {
 
             {/* <!-- price --> */}
             {priceCards.map((card) => {
-              return <PriceCard {...card} key={card.id} />;
+              return <PriceCard {...card} key={card.id} user={props.user} />;
             })}
 
             {/* <!-- end price --> */}
@@ -81,4 +84,12 @@ function PaidPage() {
   );
 }
 
-export default PaidPage;
+const mapStateToProps = ({ authUser }) => {
+  const { user, loading, error } = authUser;
+  return { user, loading, error };
+};
+const ShowTheLocationWithRouter = withRouter(PaidPage);
+export default connect(
+  mapStateToProps,
+  { }
+)(ShowTheLocationWithRouter);

@@ -12,6 +12,7 @@ import MoveDetailPage from "./MovieDetailPage";
 import HomePage from "./HomePage";
 import CatalogPage from "./CatalogPage";
 import UserPage from "./UserPage";
+import ForgetPassword from "./ForgetPassword"
 import PrivateRoute from "../components/Common/PrivateRoute";
 import RestrictedRoute from "../components/Common/RestrictedRoute";
 import { ACCESS_TOKEN } from "../constants/auth";
@@ -55,6 +56,10 @@ const App = (props) => {
         <Route
           path="/update-account"
           render={(props) => <PaidPage {...props} />}
+        />
+        <Route
+          path="/forget-password"
+          render={(props) => <ForgetPassword {...props}/>}
         />
         <PrivateRoute
           authenticated={props.user}

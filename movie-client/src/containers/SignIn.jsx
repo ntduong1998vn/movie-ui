@@ -112,7 +112,7 @@ function SignIn(props) {
                   </a>
 
                   <span className="sign__text">
-                    <a href="#">Quên mật khẩu?</a>
+                    <a href="/forget-password">Quên mật khẩu?</a>
                   </span>
                   <div className="d-flex justify-content-between align-items-center">
                     <div className="social-group">
