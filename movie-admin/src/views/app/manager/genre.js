@@ -222,12 +222,14 @@ class GenrePage extends Component {
     const { genreForm } = this.state;
     const { error } = this.props;
     this.props.addGenre(genreForm)
-    if (error === null) {
+    if (error === null||error === '') {
+      console.log(error);
       this.createNotification("add success", "filled");
       setTimeout(() => { this.toggleModal() }, 500)
       setTimeout(() => { this.dataListRender() }, 500)
     }
     else {
+      console.log(error);
       this.toggleModal()
       this.createNotification("add error", "filled");
     }
@@ -236,9 +238,10 @@ class GenrePage extends Component {
   handleEditSubmit = e => {
     const { genreForm } = this.state;
     const { error } = this.props;
+    console.log(error);
     this.props.editGenre(genreForm)
 
-    if (error === null) {
+    if (error === null||error === '') {
       this.createNotification("edit success", "filled");
       setTimeout(() => { this.toggleEditModal() }, 500)
       setTimeout(() => { this.dataListRender() }, 500)
@@ -254,7 +257,7 @@ class GenrePage extends Component {
     const { error } = this.props;
     let id = genreForm.id;
     this.props.deleteGenre(id)
-    if (error === null) {
+    if (error === null||error === '') {
       this.createNotification("delete success", "filled");
       setTimeout(() => { this.dataListRender() }, 500)
     }

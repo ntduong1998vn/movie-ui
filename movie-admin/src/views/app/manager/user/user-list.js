@@ -10,6 +10,7 @@ import FavoriteModal from "../../../../containers/manager/FavoriteModal";
 import EditUserRoleModal from "../../../../containers/manager/EditUserRoleModal";
 import { connect } from "react-redux";
 import { getListUsers, getFavoriteListByUserID, editUser } from "../../../../redux/user/actions";
+import { NotificationManager } from "../../../../components/common/react-notifications";
 
 function collect(props) {
   return { data: props.data };
@@ -153,6 +154,85 @@ class UserListPages extends Component {
     }
   };
 
+  createNotification = (type, className) => {
+    let cName = className || "";
+    switch (type) {
+      case "add success":
+        NotificationManager.success(
+          "Thêm thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit success":
+        NotificationManager.success(
+          "Sửa thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete success":
+        NotificationManager.success(
+          "Đổi trạng thái thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case 'warning':
+        NotificationManager.warning(
+          "Chỉ được chọn 1 để sửa",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "add error":
+        NotificationManager.error(
+          "Thêm thất bại",
+          "Thông báo",
+          5000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit error":
+        NotificationManager.error(
+          "Sửa thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete error":
+        NotificationManager.error(
+          "Đổi trạng thái thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      default:
+        NotificationManager.info("Info message");
+        break;
+
+    }
+  }
   onCheckItem = (event, id) => {
     if (
       event.target.tagName === "A" ||
@@ -167,7 +247,7 @@ class UserListPages extends Component {
     }
 
     let { selectedItems, userForm } = this.state;
-    let { items } = this.props;
+    let { users } = this.props;
 
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
@@ -175,7 +255,7 @@ class UserListPages extends Component {
       selectedItems.push(id);
     }
 
-    let selectUser = items.filter(x => x.id === id);
+    let selectUser = users.filter(x => x.id === id);
     userForm.id = selectUser[0].id;
     userForm.email = selectUser[0].email;
     userForm.name = selectUser[0].name;
@@ -191,11 +271,11 @@ class UserListPages extends Component {
     });
 
     if (event.shiftKey) {
-      var start = this.getIndex(id, items, "id");
-      var end = this.getIndex(this.state.lastChecked, items, "id");
-      items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
+      var start = this.getIndex(id, users, "id");
+      var end = this.getIndex(this.state.lastChecked, users, "id");
+      users = users.slice(Math.min(start, end), Math.max(start, end) + 1);
       selectedItems.push(
-        ...items.map(item => {
+        ...users.map(item => {
           return item.id;
         })
       );
@@ -236,14 +316,22 @@ class UserListPages extends Component {
   handleEditSubmit = e => {
     const { userForm } = this.state;
     let roles = [];
+    const { error } = this.props;
     userForm.roles.map(item => roles.push({
       id: item.key,
       name: item.value
     }))
     userForm.roles = roles;
     this.props.editUser(userForm)
-    setTimeout(() => { this.toggleEditModal() }, 500)
-    setTimeout(() => { this.dataListRender() }, 500)
+    if (error === null || error === '') {
+      this.createNotification("edit success", "filled");
+      setTimeout(() => { this.toggleEditModal() }, 500)
+      setTimeout(() => { this.dataListRender() }, 500)
+    }
+    else {
+      this.toggleEditModal()
+      this.createNotification("edit error", "filled");
+    }
   }
 
   handleChangeSelect = (e) => {
@@ -255,9 +343,19 @@ class UserListPages extends Component {
   }
   deleteFlag = e => {
     const { userForm } = this.state;
+    const { error } = this.props;
     userForm.delete_flag = !userForm.delete_flag;
     this.props.editUser(userForm)
-    setTimeout(() => { this.dataListRender() }, 500)
+    if (error === null || error === ''||error === undefined ) {
+      console.log(error);
+      this.createNotification("delete success", "filled");
+      setTimeout(() => { this.dataListRender() }, 500)
+    }
+    else {
+      console.log(error);
+
+      this.createNotification("delete error", "filled");
+    }
   }
   dataListRender() {
     const {
@@ -283,11 +381,9 @@ class UserListPages extends Component {
     console.log("onContextMenuClick - action : ", data.action);
     let selectedItems = this.state.selectedItems;
     if (data.action === "edit" && selectedItems.length > 1) {
-      console.log("lỗi nè")
-      // this.createNotification("filled");
+      this.createNotification("warning", "filled");
     }
     else if (data.action === "edit" && selectedItems.length === 1) {
-      // console.log("abc")
       this.toggleEditModal();
     }
     if (data.action === "delete") {
@@ -319,8 +415,8 @@ class UserListPages extends Component {
       modalOpen,
       modalEditOpen
     } = this.state;
-    const { match, totalItemCount, items, isLoading, totalPages, favorite } = this.props;
-    console.log(items)
+    const { match, totalItemCount, users, isLoading, totalPages, favorite } = this.props;
+    console.log(users)
     const startIndex = (currentPage - 1) * selectedPageSize;
     const endIndex = currentPage * selectedPageSize;
 
@@ -343,7 +439,7 @@ class UserListPages extends Component {
               startIndex={startIndex}
               endIndex={endIndex}
               selectedItemsLength={selectedItems ? selectedItems.length : 0}
-              itemsLength={items ? items.length : 0}
+              itemsLength={users ? users.length : 0}
               onSearchKey={this.onSearchKey}
               orderOptions={orderOptions}
               pageSizes={pageSizes}
@@ -365,7 +461,7 @@ class UserListPages extends Component {
               handleChangeSelect={this.handleChangeSelect}
             />
             <Row>
-              {items.map(user => {
+              {users.map(user => {
 
                 if (displayMode === "imagelist") {
                   return (
@@ -407,10 +503,10 @@ class UserListPages extends Component {
   }
 }
 const mapStateToProps = ({ userData }) => {
-  const { items, isLoading, error,
+  const { users, isLoading, error,
     totalPages, totalItemCount, favorite } = userData;
   // console.log(items,isLoading)
-  return { items, isLoading, error, totalPages, totalItemCount, favorite };
+  return { users, isLoading, error, totalPages, totalItemCount, favorite };
 };
 
 export default connect(

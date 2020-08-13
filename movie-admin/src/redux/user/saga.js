@@ -1,6 +1,6 @@
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
-import { GET_USER, GET_FAVORITE_LIST_BY_USER_ID, EDIT_USER } from "../actions";
+import { GET_LIST_USER, GET_FAVORITE_LIST_BY_USER_ID, EDIT_USER } from "../actions";
 
 import {
   getListUsersSuccess,
@@ -15,7 +15,7 @@ import { queryListUsers, updateUser } from "../../repository/user";
 import { queryListFavorites } from "../../repository/favorite";
 
 export function* watchGetListUser() {
-  yield takeLatest(GET_USER, handleGetListUser);
+  yield takeLatest(GET_LIST_USER, handleGetListUser);
 }
 
 function* handleGetListUser({ payload }) {

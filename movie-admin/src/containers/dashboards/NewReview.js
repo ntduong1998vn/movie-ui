@@ -30,7 +30,7 @@ const NewReviews = ({ deleteFlag, className = "", displayRate = false, reviews =
                   <div className="pl-3 pr-2">
                     <p className="font-weight-medium mb-0">đăng lúc: {item.createAt} bởi {item.username}</p>
                     <Button color="danger"
-                      style={{ marginLeft: "1500px" }}
+                      style={{ marginLeft: "1000px" }}
                       onClick={() => deleteFlag(item.id)}>Xóa</Button>
                     <p className="text-muted mb-0 text-small">
                       {item.content}

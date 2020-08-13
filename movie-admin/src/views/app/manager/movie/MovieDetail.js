@@ -32,8 +32,8 @@ import {
   editMovie,
   deleteMovie,
 } from "../../../../redux/movie/actions";
-import { getListComments } from "../../../../redux/comment/actions";
-import { getListReviews } from "../../../../redux/review/actions";
+import { getListComments, deleteComment } from "../../../../redux/comment/actions";
+import { getListReviews, deleteReview } from "../../../../redux/review/actions";
 import {
   FIREBASE_PATH,
   DEFAULT_IMAGE,
@@ -97,13 +97,18 @@ class DetailsPages extends Component {
   movieStatus() {
     let id = this.props.item.id;
     let status = this.props.item.visible;
+    this.createNotification("edit success", "filled");
     this.props.deleteMovie(id, !status);
+    setTimeout(() => {
+      this.dataListRender();
+    },500)
   }
   deleteComment = e => {
     let id = e;
     const { error } = this.props;
+    // console.log(this.props);
     this.props.deleteComment(id);
-    if (error === null) {
+    if (error === null|| error==='') {
       this.createNotification("delete success", "filled");
       setTimeout(() => { this.dataListRender() }, 500)
     }
@@ -116,7 +121,7 @@ class DetailsPages extends Component {
     let id = e;
     const { error } = this.props;
     this.props.deleteReview(id);
-    if (error === null) {
+    if (error === null|| error==='') {
       this.createNotification("delete success", "filled");
       setTimeout(() => { this.dataListRender() }, 100)
     }
@@ -147,7 +152,7 @@ class DetailsPages extends Component {
         break;
       case "edit success":
         NotificationManager.success(
-          "Sửa thành công",
+          "Đổi trạng thái thành công",
           "Thông báo",
           3000,
           null,
@@ -254,23 +259,23 @@ class DetailsPages extends Component {
     return isLoading ? (
       <div className="loading" />
     ) : (
-      <Fragment>
-        <Row>
-          <Colxx xxs="12">
-            <h1>{item.title}</h1>
-            <div className="text-zero top-right-button-container">
-              <UncontrolledDropdown>
-                <Button
-                  caret
-                  color="primary"
-                  size="lg"
-                  outline
-                  className="top-right-button top-right-button-single"
-                  onClick={() => this.movieStatus()}
-                >
-                  <IntlMessages id="pages.change-status" />
-                </Button>
-                {/*                
+        <Fragment>
+          <Row>
+            <Colxx xxs="12">
+              <h1>{item.title}</h1>
+              <div className="text-zero top-right-button-container">
+                <UncontrolledDropdown>
+                  <Button
+                    caret
+                    color="primary"
+                    size="lg"
+                    outline
+                    className="top-right-button top-right-button-single"
+                    onClick={() => this.movieStatus()}
+                  >
+                    <IntlMessages id="pages.change-status" />
+                  </Button>
+                  {/*                
                   <DropdownItem header>
                     <IntlMessages id="pages.add-new" />
                   </DropdownItem>
@@ -280,126 +285,113 @@ class DetailsPages extends Component {
                   <DropdownItem>
                     <IntlMessages id="pages.edit" />
                   </DropdownItem> */}
-                {/* <DropdownItem divider />
+                  {/* <DropdownItem divider />
                   <DropdownItem>
                     <IntlMessages id="pages.another-action" />
                   </DropdownItem> */}
-              </UncontrolledDropdown>
-            </div>
+                </UncontrolledDropdown>
+              </div>
 
-            {/* <Breadcrumb match={this.props.match} /> */}
+              <Breadcrumb match={this.props.match} />
 
-            <Nav tabs className="separator-tabs ml-0 mb-5">
-              <NavItem>
-                <NavLink
-                  className={classnames({
-                    active: this.state.activeFirstTab === "1",
-                    "nav-link": true,
-                  })}
-                  onClick={() => {
-                    this.toggleTab("1");
-                  }}
-                  to="#"
-                >
-                  <IntlMessages id="pages.details" />
-                </NavLink>
-              </NavItem>
+              <Nav tabs className="separator-tabs ml-0 mb-5">
+                <NavItem>
+                  <NavLink
+                    className={classnames({
+                      active: this.state.activeFirstTab === "1",
+                      "nav-link": true,
+                    })}
+                    onClick={() => {
+                      this.toggleTab("1");
+                    }}
+                    to="#"
+                  >
+                    <IntlMessages id="pages.details" />
+                  </NavLink>
+                </NavItem>
 
-              <NavItem>
-                <NavLink
-                  className={classnames({
-                    active: this.state.activeFirstTab === "2",
-                    "nav-link": true,
-                  })}
-                  onClick={() => {
-                    this.toggleTab("2");
-                  }}
-                  to="#"
-                >
-                  <IntlMessages id="pages.movie-edit" />
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  className={classnames({
-                    active: this.state.activeFirstTab === "3",
-                    "nav-link": true,
-                  })}
-                  onClick={() => {
-                    this.toggleTab("3");
-                  }}
-                  to="#"
-                >
-                  <IntlMessages id="pages.reviews" />
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink
-                  className={classnames({
-                    active: this.state.activeFirstTab === "4",
-                    "nav-link": true,
-                  })}
-                  onClick={() => {
-                    this.toggleTab("4");
-                  }}
-                  to="#"
-                >
-                  <IntlMessages id="pages.episode" />
-                </NavLink>
-              </NavItem>
-            </Nav>
+                <NavItem>
+                  <NavLink
+                    className={classnames({
+                      active: this.state.activeFirstTab === "2",
+                      "nav-link": true,
+                    })}
+                    onClick={() => {
+                      this.toggleTab("2");
+                    }}
+                    to="#"
+                  >
+                    <IntlMessages id="pages.movie-edit" />
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink
+                    className={classnames({
+                      active: this.state.activeFirstTab === "3",
+                      "nav-link": true,
+                    })}
+                    onClick={() => {
+                      this.toggleTab("3");
+                    }}
+                    to="#"
+                  >
+                    <IntlMessages id="pages.reviews" />
+                  </NavLink>
+                </NavItem>
 
-            <TabContent activeTab={this.state.activeFirstTab}>
-              <TabPane tabId="1">
-                <Row>
-                  <Colxx xxs="12" lg="4" className="mb-4">
-                    <Card className="mb-4">
-                      <div className="position-absolute "></div>
-                      <img
-                        src={image}
-                        alt="Detail"
-                        className="card-img-top"
-                        style={{
-                          height: "30%",
-                          width: "30%",
-                          marginLeft: "10px",
-                          marginTop: "10px",
-                        }}
-                      />
+              </Nav>
 
-                      <CardBody>
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.overview" />
-                        </p>
-                        <p className="mb-3">{item.overview}</p>
+              <TabContent activeTab={this.state.activeFirstTab}>
+                <TabPane tabId="1">
+                  <Row>
+                    <Colxx xxs="12" lg="4" className="mb-4">
+                      <Card className="mb-4">
+                        <div className="position-absolute "></div>
+                        <img
+                          src={image}
+                          alt="Detail"
+                          className="card-img-top"
+                          style={{
+                            height: "30%",
+                            width: "30%",
+                            marginLeft: "10px",
+                            marginTop: "10px",
+                          }}
+                        />
 
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.imdb" />
-                        </p>
-                        <div className="mb-3">
-                          {/* <Rating total={5} rating={5} interactive={false} /> */}
-                          {item.imdb}
-                        </div>
+                        <CardBody>
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.overview" />
+                          </p>
+                          <p className="mb-3">{item.overview}</p>
 
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.releaseyear" />
-                        </p>
-                        <p className="mb-3">{item.release_date}</p>
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.genres" />
-                        </p>
-                        <div className="mb-3">
-                          <p className="d-sm-inline-block mb-1">
-                            {/* {item.genres.map(x => {
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.imdb" />
+                          </p>
+                          <div className="mb-3">
+                            {/* <Rating total={5} rating={5} interactive={false} /> */}
+                            {item.imdb}
+                          </div>
+
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.releaseyear" />
+                          </p>
+                          <p className="mb-3">{item.release_date}</p>
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.genres" />
+                          </p>
+                          <div className="mb-3">
+                            <p className="d-sm-inline-block mb-1">
+                              {/* {item.genres.map(x => {
                                 return ( 
                                   <Badge color="outline-secondary mb-1 mr-1" pill>
                                     {x.name} 
                                   </Badge>
                                 )
                               })}  */}
-                            {item.genres === undefined
-                              ? null
-                              : item.genres.map((x) => {
+                              {item.genres === undefined
+                                ? null
+                                : item.genres.map((x) => {
                                   return (
                                     <Badge
                                       color="outline-secondary mb-1 mr-1"
@@ -409,63 +401,60 @@ class DetailsPages extends Component {
                                     </Badge>
                                   );
                                 })}
+                            </p>
+                          </div>
+
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.quality" />
                           </p>
-                        </div>
+                          <p>{item.quality}</p>
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.language" />
+                          </p>
+                          <p>{item.language}</p>
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.nation" />
+                          </p>
+                          <p>{item.nation}</p>
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.adult" />
+                          </p>
+                          <p>{item.adult}</p>
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.visible" />
+                          </p>
+                          {item.visible === true ? <p>True</p> : <p>False</p>}
+                        </CardBody>
+                      </Card>
+                    </Colxx>
 
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.quality" />
-                        </p>
-                        <p>{item.quality}</p>
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.language" />
-                        </p>
-                        <p>{item.language}</p>
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.nation" />
-                        </p>
-                        <p>{item.nation}</p>
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.adult" />
-                        </p>
-                        <p>{item.adult}</p>
-                        <p className="text-muted text-small mb-2">
-                          <IntlMessages id="pages.visible" />
-                        </p>
-                        {item.visible === true ? <p>True</p> : <p>False</p>}
-                      </CardBody>
-                    </Card>
-                  </Colxx>
+                    <Colxx xxs="12" lg="8">
+                      <NewComments
+                        className="mb-4"
+                        displayRate={false}
+                        comment={comments}
+                        deleteFlag={this.deleteComment}
+                      />
+                    </Colxx>
+                  </Row>
+                </TabPane>
 
-                  <Colxx xxs="12" lg="8">
-                    <NewComments
-                      className="mb-4"
-                      displayRate={false}
-                      comment={comments}
-                      deleteFlag={this.deleteComment}
-                    />
-                  </Colxx>
-                </Row>
-              </TabPane>
-
-              <TabPane tabId="2">
-                <FormikEditMovie movie={item} />
-              </TabPane>
-              <TabPane tabId="3">
-                <NewReviews
-                  className="mb-4"
-                  displayRate={true}
-                  reviews={reviews}
-                  deleteFlag={this.deleteReview}
-                />
-              </TabPane>
-              <TabPane tabId="4">
-                <Episode />
-              </TabPane>
-            </TabContent>
-          </Colxx>
-        </Row>
-      </Fragment>
-    );
+                <TabPane tabId="2">
+                  <FormikEditMovie movie={item} />
+                </TabPane>
+                <TabPane tabId="3">
+                  <NewReviews
+                    className="mb-4"
+                    displayRate={true}
+                    reviews={reviews}
+                    deleteFlag={this.deleteReview}
+                  />
+                </TabPane>
+              </TabContent>
+            </Colxx>
+          </Row>
+        </Fragment>
+      );
   }
 }
 const mapStateToProps = ({ movieData, commentData, reviewData }) => {
@@ -482,4 +471,6 @@ export default connect(mapStateToProps, {
   deleteMovie,
   getListComments,
   getListReviews,
+  deleteComment,
+  deleteReview,
 })(DetailsPages);

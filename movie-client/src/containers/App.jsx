@@ -33,10 +33,6 @@ const App = (props) => {
         <Route path="/" component={HomePage} exact />
         {/* localhost/tim-kiem?genre=Action+Romance&title=Duong&.... */}
         <Route
-          path="/genre/"
-          render={(props) => <CatalogPage {...props} />}
-        />
-        <Route
           path="/tim-kiem/"
           render={props => <CatalogPage {...props} />}
         />

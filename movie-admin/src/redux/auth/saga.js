@@ -31,7 +31,8 @@ function* getUserInfor(action) {
   const history = action.payload;
   try {
     const user = yield call(getCurrentUser);
-    if (user.error !== null) {
+    console.log(user.error);
+    if (user.id !== undefined) {
       yield put(getUserSuccess(user));
       history.push("/app/manager/genres");
     } else {
@@ -86,7 +87,7 @@ function* logout({ payload }) {
   try {
     localStorage.removeItem(ACCESS_TOKEN);
     history.push("/");
-  } catch (error) {}
+  } catch (error) { }
 }
 
 export default function* rootSaga() {

@@ -4,7 +4,7 @@ import "nouislider/distribute/nouislider.css";
 import { connect } from 'react-redux'
 import { addReview, getListReviews } from "../redux/review/actions"
 
-function ReviewList({ movieId ,reviews, ...props }) {
+function ReviewList({ movieId, reviews, ...props }) {
   const [reviewContent, setReviewContent] = useState("");
   const [reviewRate, setReviewRate] = useState("");
 
@@ -23,17 +23,17 @@ function ReviewList({ movieId ,reviews, ...props }) {
       user_id: 0,
       score: 0,
     }
-   
+    const {user} = props;
     // console.log(reviewRate)
     reviewForm.content = reviewContent;
     reviewForm.score = reviewRate;
     reviewForm.movie_id = movieId;
-    reviewForm.user_id = 1;
+    reviewForm.user_id = user.id;
     // console.log(reviewForm)
     props.addReview(reviewForm)
     setTimeout(() => {
-     props.getListReviews(6, 0, movieId, -1);
-    },200)
+      props.getListReviews(6, 0, movieId, -1);
+    }, 200)
   }
   // console.log(reviews)
   return (
@@ -44,7 +44,7 @@ function ReviewList({ movieId ,reviews, ...props }) {
             return (
               <div className="reviews__autor">
                 <img className="reviews__avatar" src={review.avatar} alt="" />
-              <span className="reviews__time">{review.createAt} bởi {review.username}</span>
+                <span className="reviews__time">{review.createAt} bởi {review.username}</span>
 
                 <span className="reviews__rating">
                   <i className="icon ion-ios-star"></i>{review.score}
@@ -86,9 +86,10 @@ function ReviewList({ movieId ,reviews, ...props }) {
   );
 }
 
-const mapStateToProps = ({ reviewData }) => {
+const mapStateToProps = ({ reviewData, authUser }) => {
   const { reviews } = reviewData;
-  return reviews
+  const { user } = authUser;
+  return { reviews, user }
 }
 export default connect(
   mapStateToProps,

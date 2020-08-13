@@ -12,9 +12,12 @@ import { getFavoriteListByUserID } from "../redux/auth/actions"
 import favoriteAPI from "../repository/favorite";
 import ReactTable from 'react-table-v6'
 import 'react-table-v6/react-table.css'
+import { Modal } from 'react-responsive-modal';
 
 function UserPage(props) {
   const [key, setKey] = useState("profile");
+  const [message, setMessage] = useState();
+  const [showModal, setShowModal] = useState(false);
   const { favorite } = props;
   const columns = [{
     Header: 'Tên Phim',
@@ -23,12 +26,12 @@ function UserPage(props) {
     Header: 'Current Time',
     accessor: 'current_time',
     Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
-  },{
+  }, {
     Header: '',
-    accessor:'movie_id',
-    Cell:props => <button className='form__btn'
-    style={{marginLeft:"100px"}}
-    onClick={() => handleRemoveFavorite(props.value)}>Bỏ yêu thích</button>
+    accessor: 'movie_id',
+    Cell: props => <button className='form__btn'
+      style={{ marginLeft: "100px" }}
+      onClick={() => handleRemoveFavorite(props.value)}>Bỏ yêu thích</button>
   }]
 
   React.useEffect(() => {
@@ -37,21 +40,37 @@ function UserPage(props) {
   function handleRemoveFavorite(movieId) {
     console.log(movieId)
     let request = favoriteAPI.removeFavorite(movieId)
-    request.then(() =>getFavoriteList())
+    request.then(() => getFavoriteList())
 
   }
 
   function onSubmitBasicForm(form) {
     console.log(form);
     UserApi.updateBasicInfo(props.user.id, form)
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error.response));
+      .then((res) => {
+        setMessage(res.data)
+        console.log(res.data)
+        setShowModal(true)
+      })
+      .catch((error) => {
+        setMessage(error.response.data)
+        setShowModal(true)
+        console.log(error.response)
+      });
   }
 
   function onSubmitChangePassword(form) {
     UserApi.changePassword(props.user.id, form)
-      .then((res) => console.log(res))
-      .catch((error) => console.log(error.response));
+      .then((res) => {
+        setMessage(res.data)
+        console.log(res)
+        setShowModal(true)
+      })
+      .catch((error) => {
+        setMessage(error.response.data)
+        setShowModal(true)
+        console.log(error.response)
+      });
   }
   function logOut() {
     props.logoutUser();
@@ -60,9 +79,23 @@ function UserPage(props) {
   function getFavoriteList() {
     props.getFavoriteListByUserID(props.user.id)
   }
+
+  function onCloseModal() {
+    setShowModal(false);
+  }
+
   console.log(favorite)
   return (
     <Fragment>
+      <Modal open={showModal} center onClose={onCloseModal}>
+        <h3>Thông báo</h3>
+        <p> {message}</p>
+        <button
+          type="button"
+          style={{marginLeft: '35px'}}
+          class="form__btn"
+          onClick={() => onCloseModal()}>OK</button>
+      </Modal>
       <PageTitle title="Thông tin cá nhân" location="Thông tin cá nhân" />
       <section className="content">
         <Tab.Container
@@ -303,7 +336,7 @@ function UserPage(props) {
                     <ReactTable
                       data={favorite}
                       columns={columns}
-                      style={{backgroundColor:'#28282d', color:'rgba(255, 255, 255, 0.7)'}}
+                      style={{ backgroundColor: '#28282d', color: 'rgba(255, 255, 255, 0.7)' }}
                     />
                   </div>
 

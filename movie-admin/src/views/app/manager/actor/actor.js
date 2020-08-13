@@ -264,7 +264,7 @@ class Actor extends Component {
     const { error } = this.props;
     let id = actorForm.id;
     this.props.deleteActor(id)
-    if (error === null) {
+    if (error === null || error === '') {
       this.createNotification("delete success", "filled");
       setTimeout(() => { this.dataListRender() }, 500)
     }
@@ -293,7 +293,7 @@ class Actor extends Component {
     }
 
     this.props.addActor(formSubmit)
-    if (error === null) {
+    if (error === null || error === '') {
       this.createNotification("add success", "filled");
       setTimeout(() => { this.toggleModal() }, 500)
       setTimeout(() => { this.dataListRender() }, 500)
@@ -317,7 +317,7 @@ class Actor extends Component {
       formSubmit.append('image', image);
     }
     this.props.editActor(actorForm.id, formSubmit)
-    if (error === null) {
+    if (error === null || error === '') {
       this.createNotification("edit success", "filled");
       setTimeout(() => { this.toggleEditModal() }, 1500)
       setTimeout(() => { this.dataListRender() }, 1500)

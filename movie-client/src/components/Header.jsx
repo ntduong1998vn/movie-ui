@@ -95,14 +95,14 @@ const Header = ({user}) => {
                   <li className="header__nav-item">
                     <a
                       className="dropdown-toggle header__nav-link"
-                      href="/genre/action/1"
+                      href="/tim-kiem"
                       role="button"
                       id="dropdownMenuCatalog"
                       data-toggle="dropdown"
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
-                      Thể loại
+                      Tìm kiếm
                     </a>
 
                     <ul
