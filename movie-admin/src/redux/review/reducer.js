@@ -41,7 +41,7 @@ export default (state = INIT_STATE, action) => {
         case DELETE_REVIEW_MANY:
             return { ...state, isLoading: false, error: '' }
         case DELETE_REVIEW_SUCCESS:
-            return { ...state, isLoading: false, error: '' }
+            return { ...state, isLoading: false, error: null }
         case DELETE_REVIEW_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
         default:

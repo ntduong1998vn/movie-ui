@@ -320,7 +320,7 @@ class UserListPages extends Component {
       modalEditOpen
     } = this.state;
     const { match, totalItemCount, items, isLoading, totalPages, favorite } = this.props;
-
+    console.log(items)
     const startIndex = (currentPage - 1) * selectedPageSize;
     const endIndex = currentPage * selectedPageSize;
 

@@ -5,7 +5,8 @@ import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.min.css";
 import wNumb from "wnumb";
 import { withRouter } from "react-router-dom";
-
+import { connect } from "react-redux";
+import {storeKeywords} from "../redux/movie/actions"
 import $ from "jquery";
 import "malihu-custom-scrollbar-plugin";
 import "malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css";
@@ -38,7 +39,7 @@ const CustomMenu = React.forwardRef(
 );
 
 function FilterMovie({ genreList, qualities, ...props }) {
-  const [searchGenres, setsearchGenres] = useState([]);
+  const [searchGenres, setSearchGenres] = useState([]);
   const [quality, setQuality] = useState([]);
   const [imdb, setImdb] = useState([0, 0]);
   const [years, setYears] = useState([1990, 2020]);
@@ -49,6 +50,13 @@ function FilterMovie({ genreList, qualities, ...props }) {
     let menuId = e.target.closest(".filter__item").getAttribute("id");
     document.querySelector(`#${menuId} .filter__item-btn input`).value =
       e.target.textContent;
+    // console.log( e.target.textContent);
+    if (menuId === "filter__genre") {
+      setSearchGenres(e.target.textContent)
+    }
+    else if (menuId === "filter__quality") {
+      setQuality(e.target.textContent)
+    }
   }
 
   const handleUpdateSlider = (index) => (
@@ -68,48 +76,51 @@ function FilterMovie({ genreList, qualities, ...props }) {
     ];
     let sliders = [firstValues, secondValues];
     sliders[index][handle].innerHTML = value[handle];
+    if (index === 0) {
+      setImdb(value)
+    }
+    else if (index === 1) {
+      setYears(value)
+    }
   };
 
   function handleSubmit(e) {
     e.preventDefault();
-    let searchTerm = "";
-    if (searchGenres.length > 0) {
-      searchTerm += "genre="
-      for (let i = 0; i < searchGenres.length; i++) {
-        if (i !== searchGenres.length - 1)
-          searchTerm += searchGenres[i] + "+"
-        else
-          searchTerm += searchGenres[i]
-      }
-    }
+    let keyword = "";
+    // if (searchGenres.length > 0) {
+    //   keyword += "genre="
+    //   for (let i = 0; i < searchGenres.length; i++) {
+    //     if (i !== searchGenres.length - 1)
+    //       keyword += searchGenres[i] + "+"
+    //     else
+    //       keyword += searchGenres[i]
+    //   }
+    // }
     if (quality.length > 0) {
-      searchTerm += "quality="
-      for (let i = 0; i < quality.length; i++) {
-        if (i !== quality.length - 1)
-          searchTerm += quality[i] + "+"
-        else
-          searchTerm += quality[i]
-      }
+      keyword += "quality:" + quality
     }
     if (imdb.length > 0) {
-      searchTerm += "imdb="
-      for (let i = 0; i < imdb.length; i++) { 
+      keyword += ",imdb>"
+      for (let i = 0; i < imdb.length; i++) {
         if (i !== imdb.length - 1)
-          searchTerm += imdb[i] + "-"
+          keyword += parseInt(imdb[i]) + ",imdb<"
         else
-          searchTerm += imdb[i]
+          keyword += parseInt(imdb[i])
       }
     }
-    if (years.length > 0) {
-      searchTerm += "years="
-      for (let i = 0; i < years.length; i++) {
-        if (i !== years.length - 1)
-          searchTerm += years[i] + "-"
-        else
-          searchTerm += years[i]
-      }
-    }
-    props.history.push({ pathname: `/tim-kiem?advance=${searchTerm}` });
+    // if (years.length > 0) {
+    //   keyword += ",release_date>"
+    //   for (let i = 0; i < years.length; i++) {
+    //     if (i !== years.length - 1)
+    //       keyword += years[i] + ",release_date<"
+    //     else
+    //       keyword += years[i]
+    //   }
+    // }
+    localStorage.setItem("keyword",keyword)
+    props.history.push({ pathname: `/tim-kiem` });
+    // console.log(keyword)
+    props.storeKeywords(keyword)
   }
 
   return (
@@ -132,7 +143,7 @@ function FilterMovie({ genreList, qualities, ...props }) {
                   // aria-haspopup="true"
                   // aria-expanded="false"
                   >
-                    <input type="button" value="Action/Adventure" />
+                    <input type="button" />
                     <span></span>
                   </Dropdown.Toggle>
 
@@ -162,7 +173,7 @@ function FilterMovie({ genreList, qualities, ...props }) {
                     role="navigation"
                     id="filter-quality"
                   >
-                    <input type="button" value="HD" />
+                    <input type="button" />
                     <span></span>
                   </Dropdown.Toggle>
 
@@ -182,7 +193,6 @@ function FilterMovie({ genreList, qualities, ...props }) {
                   </Dropdown.Menu>
                 </Dropdown>
                 {/* <!-- end filter item --> */}
-
                 {/* <!-- filter item --> */}
                 <Dropdown className="filter__item" id="filter__rate">
                   <span className="filter__item-label">IMBd:</span>
@@ -232,6 +242,7 @@ function FilterMovie({ genreList, qualities, ...props }) {
                   <Dropdown.Menu className="filter__item-menu filter__item-menu--range">
                     {/* <div id="filter__years"></div> */}
                     <Nouislider
+                      id="#filter__years"
                       range={{ min: 2000, max: 2020 }}
                       step={1}
                       connect={true}
@@ -259,4 +270,12 @@ function FilterMovie({ genreList, qualities, ...props }) {
 
 FilterMovie.propTypes = {};
 
-export default withRouter(FilterMovie);
+const ShowTheLocationWithRouter = withRouter(FilterMovie);
+const mapStateToProps = ({  }) => {};
+  
+export default connect(
+    mapStateToProps,
+    {
+      storeKeywords
+    }
+  )(ShowTheLocationWithRouter);

@@ -7,6 +7,8 @@ import DetailCard from "../DetailCard";
 import { getEpisodeByID } from "../../redux/episode/actions";
 import { connect } from "react-redux";
 
+import favoriteAPI from "../../repository/favorite";
+
 import VideoPlayer from "../Player/VideoJS";
 import '../../assets/css/button.css';
 import 'react-responsive-modal/styles.css';
@@ -14,16 +16,32 @@ import { Modal } from 'react-responsive-modal';
 
 var playTime = 0;
 
-function SeriesMovie({ movie, episodes, sources, ...props }) {
+function SeriesMovie({ movie, episodes, sources, user, ...props }) {
   const [labelServer, setLabelServer] = useState([]);
   const [soucreVideo, setSoucreVideo] = useState([]);
   const [activeLabel, setActiveLabel] = useState([]);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [lastTime, setLastTime] = useState(0);
+  const [favorite, setFavorite] = useState({});
 
   useEffect(() => {
     handleEpisodeClick(1, movie.id)
   }, [movie]);
+
+  useEffect(() => {
+    onOpenModal()
+  }, [favorite])
+
+  useEffect(() => {
+    if (movie.id !== undefined && movie.id !== 0) {
+      favoriteAPI.checkExistsFavorite(movie.id).then(result => {
+        if (result.data.success === "OK") {
+          setFavorite(result.data.result)
+        }
+      })
+    }
+  }, [movie])
 
   useEffect(() => {
     // filter label server
@@ -59,6 +77,43 @@ function SeriesMovie({ movie, episodes, sources, ...props }) {
   function handleEpisodeClick(episodeId, movieId) {
     props.getEpisodeByID(episodeId, movieId);
   }
+  useEffect(() => {
+    // console.log(favorite)
+    if (favorite.id !== undefined) {
+      setLiked(true);
+    }
+    else {
+      setLiked(false);
+
+    }
+
+  }, [favorite])
+
+  useEffect(() => {
+    let currentTime = 0
+    // console.log(favorite)
+    let temp = setInterval(() => {
+      currentTime = parseInt(localStorage.getItem('playtime'));
+      // console.log(currentTime)
+      if (liked === true) {
+        let favoriteForm = {
+          current_time: currentTime,
+          movie_id: movie.id,
+          movie_name: movie.title,
+          user_id: user.id
+        }
+        console.log(favoriteForm)
+        favoriteAPI.updateCurrentTime(favoriteForm)
+      }
+    }, 1000)
+     if (liked === false) {
+      console.log('check')
+      clearInterval(temp)
+    }
+    return () => {
+      clearInterval(temp)
+    }
+  },[liked])
 
   useEffect(() => {
     if (sources !== undefined) {
@@ -99,32 +154,48 @@ function SeriesMovie({ movie, episodes, sources, ...props }) {
     return "";
   }
   function checkCookie() {
-    // playTime=parseFloat(getCookie("Play time"));
-    playTime = parseFloat(localStorage.getItem("playtime"));
+    playTime = parseFloat(getCookie("Play time"));
+    return playTime
+    // setCurrentTime(playTime);
+    // playTime = parseFloat(localStorage.getItem("playtime"));
+
     // console.log(playTime)
   }
   // useEffect(() => {
-  //   setTimeout(() => { checkCookie() }, 50)
-  // })\
+  //   setInterval(() => { checkCookie() }, 5000)
+  // })
 
   function onCloseModal() {
     setShowModal(false)
   }
   function getCurrentTime() {
-    console.log("Có xem");
+    setLastTime(favorite.current_time)
     onCloseModal();
   }
 
   function onOpenModal() {
-    //Condition for open Modal
-
-    setShowModal(true)
+    if (favorite.current_time !== 0 && favorite.current_time !== undefined) {
+      setShowModal(true);
+    }
   }
   // console.log(showModal)
   function changeStatusLike() {
+    let currentTime = parseInt(localStorage.getItem('playtime'));
+    if (liked === false) {
+      let favoriteForm = {
+        current_time: currentTime,
+        movie_id: movie.id,
+        movie_name: movie.title,
+        user_id: user.id
+      }
+      favoriteAPI.addFavorite(favoriteForm)
+    }
+    else {
+      favoriteAPI.removeFavorite(movie.id)
+    }
     setLiked(!liked)
   }
-  console.log(liked)
+  // localStorage.setItem("liked", liked)
   return (
     <section className="section details">
       {/* <!-- details background --> */}
@@ -133,7 +204,7 @@ function SeriesMovie({ movie, episodes, sources, ...props }) {
       ) : (
           <Modal open={showModal} center onClose={onCloseModal}>
             <h3>Thông báo</h3>
-            <p>Bạn đã xem phim tại</p>
+            <p>Bạn đã xem phim tại {favorite.current_time}s</p>
             <p> Bạn có muốn tiếp tục xem không?</p>
             <button type="button" class="button1" onClick={() => getCurrentTime()}>Có</button>
             <button type="button" class="button2" onClick={() => onCloseModal()}>Không</button>
@@ -149,7 +220,7 @@ function SeriesMovie({ movie, episodes, sources, ...props }) {
 
           <div className="col-12 ">
 
-            <VideoPlayer src={soucreVideo} />
+            <VideoPlayer src={soucreVideo} lastTime={lastTime} />
 
           </div>
           <div className="col-12">
@@ -261,16 +332,16 @@ function SeriesMovie({ movie, episodes, sources, ...props }) {
             </div>
           </div>
         </Row>
-
       </div>
     </section >
   );
 }
-const mapStateToProps = ({ episodeData, movieData }) => {
+const mapStateToProps = ({ episodeData, movieData, authUser }) => {
 
   const { episodes, sources } = episodeData;
   const { movie } = movieData;
-  return { sources, episodes, movie };
+  const { user } = authUser;
+  return { sources, episodes, movie, user };
 };
 export default connect(
   mapStateToProps,

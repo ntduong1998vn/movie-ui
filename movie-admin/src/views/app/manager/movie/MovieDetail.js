@@ -28,6 +28,7 @@ import NewComments from "../../../../containers/dashboards/NewComments";
 import NewReviews from "../../../../containers/dashboards/NewReview";
 import FormikEditMovie from "../../../../containers/form-validations/FormikEditMovie";
 
+import { NotificationManager } from "../../../../components/common/react-notifications";
 import { connect } from "react-redux";
 import { getMovieByID, addMovie, editMovie, deleteMovie } from "../../../../redux/movie/actions";
 import { getListComments } from "../../../../redux/comment/actions";
@@ -96,17 +97,29 @@ class DetailsPages extends Component {
     this.props.deleteMovie(id, !status)
   }
   deleteComment = e => {
-    console.log(e)
     let id = e;
+    const { error } = this.props;
     this.props.deleteComment(id);
-    setTimeout(() => { this.dataListRender() }, 100)
+    if (error === null) {
+      this.createNotification("delete success", "filled");
+      setTimeout(() => { this.dataListRender() }, 500)
+    }
+    else {
+      this.createNotification("delete error", "filled");
+    }
   }
 
   deleteReview = e => {
-    console.log(e)
     let id = e;
+    const { error } = this.props;
     this.props.deleteReview(id);
-    setTimeout(() => { this.dataListRender() }, 100)
+    if (error === null) {
+      this.createNotification("delete success", "filled");
+      setTimeout(() => { this.dataListRender() }, 100)
+    }
+    else {
+      this.createNotification("delete error", "filled");
+    }
   }
 
   toggleTab(tab) {
@@ -114,6 +127,85 @@ class DetailsPages extends Component {
       this.setState({
         activeFirstTab: tab
       });
+    }
+  }
+  createNotification = (type, className) => {
+    let cName = className || "";
+    switch (type) {
+      case "add success":
+        NotificationManager.success(
+          "Thêm thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit success":
+        NotificationManager.success(
+          "Sửa thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete success":
+        NotificationManager.success(
+          "Xóa thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case 'warning':
+        NotificationManager.warning(
+          "Chỉ được chọn 1 để sửa",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "add error":
+        NotificationManager.error(
+          "Thêm thất bại",
+          "Thông báo",
+          5000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit error":
+        NotificationManager.error(
+          "Sửa thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete error":
+        NotificationManager.error(
+          "Xóa thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      default:
+        NotificationManager.info("Info message");
+        break;
+
     }
   }
   async getImageUrl() {
@@ -151,6 +243,7 @@ class DetailsPages extends Component {
   }
   render() {
     const { image } = this.state;
+    console.log(image)
     const { item, isLoading, comments, reviews, error } = this.props;
     if (error !== "") {
       console.log(error);

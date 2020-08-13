@@ -12,6 +12,8 @@ import IntlMessages from "../../helpers/IntlMessages";
 import DropzoneExample from "../forms/DropzoneExample";
 // import MultiDropzone from "../forms/MultiDropzone";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
+
 import { getListGenres } from "../../redux/genre/actions"
 import { addMovie } from "../../redux/movie/actions"
 
@@ -96,6 +98,7 @@ class FormikCustomComponents extends Component {
       formSubmit.append('poster', image);
     }
     console.log(image)
+    this.props.history.push({pathname:`/app/manager/movies/movie-list`})
     this.props.addMovie(formSubmit)
     setSubmitting(false);
 
@@ -405,10 +408,10 @@ const mapStateToProps = ({ genreData }) => {
   return { genres };
 
 };
-
+const ShowTheLocationWithRouter = withRouter(FormikCustomComponents);
 export default connect(
   mapStateToProps, {
   getListGenres,
   addMovie
 }
-)(FormikCustomComponents);
+)(ShowTheLocationWithRouter);

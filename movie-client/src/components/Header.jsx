@@ -51,9 +51,9 @@ const Header = ({user}) => {
     };
   }, []);
 
-  function handleSearch(e) {
-    e.preventDefault();
-  }
+  // function handleSearch(e) {
+  //   e.preventDefault();
+  // }
   return (
     <header className="header">
       <div className="header__wrap">

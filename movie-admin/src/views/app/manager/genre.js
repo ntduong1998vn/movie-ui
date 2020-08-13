@@ -220,27 +220,47 @@ class GenrePage extends Component {
 
   handleAddSubmit = e => {
     const { genreForm } = this.state;
-
+    const { error } = this.props;
     this.props.addGenre(genreForm)
-
-    setTimeout(() => { this.toggleModal() }, 100)
-    setTimeout(() => { this.dataListRender() }, 100)
-
+    if (error === null) {
+      this.createNotification("add success", "filled");
+      setTimeout(() => { this.toggleModal() }, 500)
+      setTimeout(() => { this.dataListRender() }, 500)
+    }
+    else {
+      this.toggleModal()
+      this.createNotification("add error", "filled");
+    }
   }
 
   handleEditSubmit = e => {
     const { genreForm } = this.state;
+    const { error } = this.props;
     this.props.editGenre(genreForm)
 
-    setTimeout(() => { this.toggleEditModal() }, 100)
-    setTimeout(() => { this.dataListRender() }, 100)
+    if (error === null) {
+      this.createNotification("edit success", "filled");
+      setTimeout(() => { this.toggleEditModal() }, 500)
+      setTimeout(() => { this.dataListRender() }, 500)
+    }
+    else {
+      this.toggleEditModal()
+      this.createNotification("edit error", "filled");
+    }
 
   }
   deleteFlag = e => {
     const { genreForm } = this.state;
+    const { error } = this.props;
     let id = genreForm.id;
     this.props.deleteGenre(id)
-    setTimeout(() => { this.dataListRender() }, 500)
+    if (error === null) {
+      this.createNotification("delete success", "filled");
+      setTimeout(() => { this.dataListRender() }, 500)
+    }
+    else {
+      this.createNotification("delete error", "filled");
+    }
   }
   onContextMenuClick = (e, data, target) => {
 
@@ -268,17 +288,84 @@ class GenrePage extends Component {
 
     return true;
   };
-  createNotification = (className) => {
+  createNotification = (type, className) => {
     let cName = className || "";
+    switch (type) {
+      case "add success":
+        NotificationManager.success(
+          "Thêm thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit success":
+        NotificationManager.success(
+          "Sửa thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete success":
+        NotificationManager.success(
+          "Xóa thành công",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case 'warning':
+        NotificationManager.warning(
+          "Chỉ được chọn 1 để sửa",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "add error":
+        NotificationManager.error(
+          "Thêm thất bại",
+          "Thông báo",
+          5000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "edit error":
+        NotificationManager.error(
+          "Sửa thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      case "delete error":
+        NotificationManager.error(
+          "Xóa thất bại",
+          "Thông báo",
+          3000,
+          null,
+          null,
+          cName
+        );
+        break;
+      default:
+        NotificationManager.info("Info message");
+        break;
 
-    NotificationManager.warning(
-      "Chỉ được chọn 1 để sửa",
-      "Thông báo",
-      5000,
-      null,
-      null,
-      cName
-    );
+    }
   }
 
   render() {

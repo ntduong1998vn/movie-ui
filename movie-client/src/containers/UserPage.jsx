@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import UserApi from "../repository/UserAPI";
 import { logoutUser } from "../redux/actions";
 import { getFavoriteListByUserID } from "../redux/auth/actions"
+import favoriteAPI from "../repository/favorite";
 import ReactTable from 'react-table-v6'
 import 'react-table-v6/react-table.css'
 
@@ -22,11 +23,23 @@ function UserPage(props) {
     Header: 'Current Time',
     accessor: 'current_time',
     Cell: props => <span className='number'>{props.value}</span> // Custom cell components!
+  },{
+    Header: '',
+    accessor:'movie_id',
+    Cell:props => <button className='form__btn'
+    style={{marginLeft:"100px"}}
+    onClick={() => handleRemoveFavorite(props.value)}>Bỏ yêu thích</button>
   }]
 
   React.useEffect(() => {
     getFavoriteList();
   }, [])
+  function handleRemoveFavorite(movieId) {
+    console.log(movieId)
+    let request = favoriteAPI.removeFavorite(movieId)
+    request.then(() =>getFavoriteList())
+
+  }
 
   function onSubmitBasicForm(form) {
     console.log(form);

@@ -1,7 +1,9 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 
 import {
-    GET_MOVIE, GET_MOVIE_ID, GET_MOVIE_BY_GENRE,
+    GET_MOVIE, GET_MOVIE_ID, 
+    GET_MOVIE_BY_GENRE,GET_MOVIE_BY_KEYWORDS,
+    STORE_KEYWORDS
 } from "../actions";
 
 import {
@@ -10,10 +12,14 @@ import {
     getMovieByIDSuccess,
     getMovieByIDError,
     getMovieByGenreSuccess,
-    getMovieByGenreError
+    getMovieByGenreError,
+    getMovieByKeywordSuccess,
+    getMovieByKeywordError,
+    storeKeywordSuccess,
+    storeKeywordError
 } from './actions';
 
-import { queryListMovies, queryMovieByID, queryMovieByGenres} from '../../repository/movie';
+import { queryListMovies, queryMovieByID, queryMovieByGenres,searchAdvanced} from '../../repository/movie';
 
 export function* watchGetListMovie() {
     yield takeLatest(GET_MOVIE, handleGetListMovie)
@@ -79,10 +85,52 @@ function* handleGetMovieByGenre({ payload }) {
     }
 }
 
+export function* watchGetMovieByKeyword() {
+    yield takeLatest(GET_MOVIE_BY_KEYWORDS, handleGetMovieByKeyword)
+};
+
+function* handleGetMovieByKeyword({ payload }) {
+    console.log(payload)
+    const keyword = payload.keyword
+    const currentPage = payload.currentPage;
+    try {
+        const movie = yield call(searchAdvanced,currentPage,keyword);
+        console.log(movie)
+        if (!movie.message) {
+            yield put(getMovieByKeywordSuccess(movie))
+        }
+        else {
+            yield put(getMovieByKeywordError(movie.message))
+        }
+    } catch (error) {
+        yield put(getMovieByKeywordError(error))
+    }
+}
+
+export function* watchStoreKeyword() {
+    yield takeLatest(STORE_KEYWORDS, handleStoreKeyword)
+};
+
+function* handleStoreKeyword({ payload }) {
+    const keyword = payload
+    try {
+        if (keyword) {
+            yield put(storeKeywordSuccess(keyword))
+        }
+        else {
+            yield put(storeKeywordError(''))
+        }
+    } catch (error) {
+        yield put(storeKeywordError(error))
+    }
+}
+
 export default function* rootSaga() {
     yield all([
         fork(watchGetListMovie),
         fork(watchGetMovieByID),
-        fork(watchGetMovieByGenre)
+        fork(watchGetMovieByGenre),
+        fork(watchGetMovieByKeyword),
+        fork(watchStoreKeyword)
     ]);
 }
