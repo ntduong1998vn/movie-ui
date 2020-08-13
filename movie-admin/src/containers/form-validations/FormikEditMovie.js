@@ -12,6 +12,7 @@ import IntlMessages from "../../helpers/IntlMessages";
 import DropzoneExample from "../forms/DropzoneExample";
 // import MultiDropzone from "../forms/MultiDropzone";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { getListGenres } from "../../redux/genre/actions"
 import { editMovie } from "../../redux/movie/actions"
 import moment from 'moment'
@@ -98,6 +99,7 @@ class FormikEditMovie extends Component {
       formSubmit.append('poster', image);
     }
     console.log(image)
+    this.props.history.push({pathname:`/app/manager/movies/movie-list`})
     this.props.editMovie(movieId, formSubmit)
     setSubmitting(false);
 
@@ -410,10 +412,11 @@ const mapStateToProps = ({ genreData, movieData }) => {
   return { genres, genreOptions };
 
 };
+const ShowTheLocationWithRouter = withRouter(FormikEditMovie);
 
 export default connect(
   mapStateToProps, {
   getListGenres,
   editMovie
 }
-)(FormikEditMovie);
+)(ShowTheLocationWithRouter);

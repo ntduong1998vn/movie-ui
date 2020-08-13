@@ -243,6 +243,7 @@ class DetailsPages extends Component {
   }
   render() {
     const { image } = this.state;
+    console.log(image)
     const { item, isLoading, comments, reviews, error } = this.props;
     if (error !== "") {
       console.log(error);

@@ -36,7 +36,7 @@ const App = (props) => {
           render={(props) => <CatalogPage {...props} />}
         />
         <Route
-          path="/tim-kiem"
+          path="/tim-kiem/"
           render={props => <CatalogPage {...props} />}
         />
         <Route

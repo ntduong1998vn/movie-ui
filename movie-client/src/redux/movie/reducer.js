@@ -1,8 +1,10 @@
 import {
-    GET_MOVIE, GET_MOVIE_ID,GET_MOVIE_BY_GENRE,
+    GET_MOVIE, GET_MOVIE_ID, GET_MOVIE_BY_GENRE, GET_MOVIE_BY_KEYWORDS, STORE_KEYWORDS,
     GET_MOVIE_SUCCESS, GET_MOVIE_ERROR,
     GET_MOVIE_ID_SUCCESS, GET_MOVIE_ID_ERROR,
-    GET_MOVIE_BY_GENRE_SUCCESS,GET_MOVIE_BY_GENRE_ERROR
+    GET_MOVIE_BY_GENRE_SUCCESS, GET_MOVIE_BY_GENRE_ERROR,
+    GET_MOVIE_BY_KEYWORD_SUCCESS, GET_MOVIE_BY_KEYWORD_ERROR,
+    STORE_KEYWORD_SUCCESS, STORE_KEYWORD_ERROR
 } from "../actions";
 
 const INIT_STATE = {
@@ -38,7 +40,9 @@ const INIT_STATE = {
         characters: [],
         episodes: []
     },
-    movieByGenre: []
+    movieByGenre: [],
+    keyword: '',
+    movieBySearches: [],
 };
 
 export default (state = INIT_STATE, action) => {
@@ -73,11 +77,34 @@ export default (state = INIT_STATE, action) => {
             console.log(action)
             return {
                 ...state, isLoading: false, movieByGenre: action.payload.content, error: '',
-                totalPages: action.payload.totalPages,totalmovieCount: action.payload.totalElements
+                totalPages: action.payload.totalPages, totalmovieCount: action.payload.totalElements
             }
         case GET_MOVIE_BY_GENRE_ERROR:
             // console.log(action)
             return { ...state, isLoading: false, movieByGenre: [], error: action.payload.message }
+        case GET_MOVIE_BY_KEYWORDS:
+            // console.log(action)
+            return { ...state, isLoading: true, error: '', movieBySearches: [] };
+        case GET_MOVIE_BY_KEYWORD_SUCCESS:
+            console.log(action)
+            return {
+                ...state, isLoading: false, movieBySearches: action.payload.content, error: '',
+                totalPages: action.payload.totalPages, totalmovieCount: action.payload.totalElements
+            }
+        case GET_MOVIE_BY_KEYWORD_ERROR:
+            // console.log(action)
+            return { ...state, isLoading: false, movieBySearches: [], error: action.payload.message }
+        case STORE_KEYWORDS:
+            console.log(action)
+            return { ...state, isLoading: true, error: '', keyword:'' };
+        case STORE_KEYWORD_SUCCESS:
+            console.log(action)
+            return {
+                ...state, isLoading: false, keyword: action.payload
+            }
+        case STORE_KEYWORD_ERROR:
+            console.log(action)
+            return { ...state, isLoading: false, keyword:'', error: action.payload }
         default:
             return { ...state };
     }

@@ -78,14 +78,43 @@ function SeriesMovie({ movie, episodes, sources, user, ...props }) {
     props.getEpisodeByID(episodeId, movieId);
   }
   useEffect(() => {
-    console.log(favorite)
-    if (favorite.id!== undefined) {
+    // console.log(favorite)
+    if (favorite.id !== undefined) {
       setLiked(true);
     }
     else {
       setLiked(false);
+
     }
-  },[favorite])
+
+  }, [favorite])
+
+  useEffect(() => {
+    let currentTime = 0
+    // console.log(favorite)
+    let temp = setInterval(() => {
+      currentTime = parseInt(localStorage.getItem('playtime'));
+      // console.log(currentTime)
+      if (liked === true) {
+        let favoriteForm = {
+          current_time: currentTime,
+          movie_id: movie.id,
+          movie_name: movie.title,
+          user_id: user.id
+        }
+        console.log(favoriteForm)
+        favoriteAPI.updateCurrentTime(favoriteForm)
+      }
+    }, 1000)
+     if (liked === false) {
+      console.log('check')
+      clearInterval(temp)
+    }
+    return () => {
+      clearInterval(temp)
+    }
+  },[liked])
+
   useEffect(() => {
     if (sources !== undefined) {
       let linkVideo = sources.filter(item => item.server === activeLabel);
@@ -151,7 +180,7 @@ function SeriesMovie({ movie, episodes, sources, user, ...props }) {
   }
   // console.log(showModal)
   function changeStatusLike() {
-    let currentTime = checkCookie();
+    let currentTime = parseInt(localStorage.getItem('playtime'));
     if (liked === false) {
       let favoriteForm = {
         current_time: currentTime,
@@ -160,7 +189,6 @@ function SeriesMovie({ movie, episodes, sources, user, ...props }) {
         user_id: user.id
       }
       favoriteAPI.addFavorite(favoriteForm)
-      favoriteAPI.updateCurrentTime(favoriteForm)
     }
     else {
       favoriteAPI.removeFavorite(movie.id)

@@ -13,7 +13,7 @@ class Pagination extends React.Component {
       currentPage = 1,
       numberLimit = 5,
     } = this.props;
-    console.log(this.props)
+    // console.log(this.props)
     let startPoint = 1;
     let endPoint = numberLimit;
 

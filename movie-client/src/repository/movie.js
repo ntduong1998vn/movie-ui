@@ -29,3 +29,11 @@ export const queryMovieByGenres = async (id,currentPage) => {
         .then(res => res.data)
         .catch(error => error.response)
 }
+
+export const searchAdvanced = async (currentPage,keyword) => {
+    return await axios
+    .get(`${apiMovie}/advanced?currentPage=${currentPage}&search=${keyword}`)
+    .then(res => res.data)
+    .catch(error => error.response)
+}
+
