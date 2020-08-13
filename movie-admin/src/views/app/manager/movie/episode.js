@@ -11,7 +11,7 @@ import {
   DropdownMenu,
   TabContent,
   TabPane,
-  ButtonDropdown
+  ButtonDropdown,
 } from "reactstrap";
 import { NavLink } from "react-router-dom";
 import classnames from "classnames";
@@ -25,16 +25,16 @@ import QuestionBuilder from "../../../../containers/applications/QuestionBuilder
 import {
   getSurveyDetail,
   deleteSurveyQuestion,
-  saveSurvey
+  saveSurvey,
+  getAllEpisode,
 } from "../../../../redux/actions";
 import SurveyQuotas from "../../../../containers/applications/SurveyQuotas";
 import SurveyCharts from "../../../../containers/applications/SurveyCharts";
 import SurveyDetailApplicationMenu from "../../../../containers/applications/SurveyDetailApplicationMenu";
-// import SurveyDetailCard from "../../../../components/applications/SurveyDetailCard";
 
 const surveyData = [];
 
-class SurveyDetailApp extends Component {
+class EpisodePage extends Component {
   constructor(props) {
     super(props);
     this.toggleTab = this.toggleTab.bind(this);
@@ -42,24 +42,25 @@ class SurveyDetailApp extends Component {
     this.state = {
       activeFirstTab: "1",
       dropdownSplitOpen: false,
-      surveyData: surveyData
+      surveyData: surveyData,
     };
   }
   componentDidMount() {
     this.props.getSurveyDetail();
+    this.props.getAllEpisode(6);
   }
 
   toggleTab(tab) {
     if (this.state.activeTab !== tab) {
       this.setState({
-        activeFirstTab: tab
+        activeFirstTab: tab,
       });
     }
   }
 
   toggleSplit() {
-    this.setState(prevState => ({
-      dropdownSplitOpen: !prevState.dropdownSplitOpen
+    this.setState((prevState) => ({
+      dropdownSplitOpen: !prevState.dropdownSplitOpen,
     }));
   }
 
@@ -105,12 +106,14 @@ class SurveyDetailApp extends Component {
               <ButtonDropdown
                 className="top-right-button top-right-button-single"
                 isOpen={this.state.dropdownSplitOpen}
-                toggle={this.toggleSplit}>
+                toggle={this.toggleSplit}
+              >
                 <Button
                   outline
                   className="flex-grow-1"
                   size="lg"
-                  color="primary">
+                  color="primary"
+                >
                   SAVE
                 </Button>
                 <DropdownToggle
@@ -118,7 +121,8 @@ class SurveyDetailApp extends Component {
                   className="dropdown-toggle-split btn-lg"
                   caret
                   outline
-                  color="primary"/>
+                  color="primary"
+                />
                 <DropdownMenu right>
                   <DropdownItem>
                     <IntlMessages id="survey.delete" />
@@ -138,12 +142,13 @@ class SurveyDetailApp extends Component {
                     <NavLink
                       className={classnames({
                         active: this.state.activeFirstTab === "1",
-                        "nav-link": true
+                        "nav-link": true,
                       })}
                       onClick={() => {
                         this.toggleTab("1");
                       }}
-                      to="#">
+                      to="#"
+                    >
                       DETAILS
                     </NavLink>
                   </NavItem>
@@ -151,12 +156,13 @@ class SurveyDetailApp extends Component {
                     <NavLink
                       className={classnames({
                         active: this.state.activeFirstTab === "2",
-                        "nav-link": true
+                        "nav-link": true,
                       })}
                       onClick={() => {
                         this.toggleTab("2");
                       }}
-                      to="#">
+                      to="#"
+                    >
                       RESULTS
                     </NavLink>
                   </NavItem>
@@ -165,7 +171,6 @@ class SurveyDetailApp extends Component {
                 <TabContent activeTab={this.state.activeFirstTab}>
                   <TabPane tabId="1">
                     <Row>
-
                       <Colxx xxs="12" lg="8">
                         <ul className="list-unstyled mb-4">
                           {survey.questions.map((item, index) => {
@@ -175,9 +180,10 @@ class SurveyDetailApp extends Component {
                                   order={index}
                                   {...item}
                                   expanded={!item.title && true}
-                                  deleteClick={id => {
+                                  deleteClick={(id) => {
                                     this.deleteQuestion(id);
-                                  }}/>
+                                  }}
+                                />
                               </li>
                             );
                           })}
@@ -188,7 +194,8 @@ class SurveyDetailApp extends Component {
                             outline
                             color="primary"
                             className="mt-3"
-                            onClick={() => this.addQuestion()}>
+                            onClick={() => this.addQuestion()}
+                          >
                             <i className="simple-icon-plus btn-group-icon" />{" "}
                             Add Question
                           </Button>
@@ -196,7 +203,7 @@ class SurveyDetailApp extends Component {
                       </Colxx>
                     </Row>
                   </TabPane>
-                  
+
                   <TabPane tabId="2">
                     <Row>
                       <SurveyQuotas />
@@ -218,14 +225,12 @@ class SurveyDetailApp extends Component {
 
 const mapStateToProps = ({ surveyDetailApp }) => {
   return {
-    surveyDetailApp
+    surveyDetailApp,
   };
 };
-export default connect(
-  mapStateToProps,
-  {
-    getSurveyDetail,
-    deleteSurveyQuestion,
-    saveSurvey
-  }
-)(SurveyDetailApp);
+export default connect(mapStateToProps, {
+  getSurveyDetail,
+  deleteSurveyQuestion,
+  saveSurvey,
+  getAllEpisode,
+})(EpisodePage);

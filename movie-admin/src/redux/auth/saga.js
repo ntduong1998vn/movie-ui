@@ -1,10 +1,20 @@
-import { all, call, fork, put, takeEvery } from "redux-saga/effects";
-import { auth } from "../../helpers/Firebase";
-import { loginWithEmailPasswordAsync } from "./../../repository/AuthAPI";
-import { ACCESS_TOKEN } from "./../../constants/auth";
-import { LOGIN_USER, LOGOUT_USER } from "../actions";
+import {
+  all,
+  call,
+  fork,
+  put,
+  takeEvery,
+  takeLatest,
+} from "redux-saga/effects";
 
-import { loginUserSuccess, loginUserError } from "./actions";
+import {
+  loginWithEmailPasswordAsync,
+  getCurrentUser,
+} from "./../../repository/AuthAPI";
+import { ACCESS_TOKEN } from "./../../constants/auth";
+import { LOGIN_USER, LOGOUT_USER, GET_CURRENT_USER } from "../actions";
+
+import { loginUserSuccess, loginUserError, getUserSuccess } from "./actions";
 
 export function* watchLoginUser() {
   yield takeEvery(LOGIN_USER, loginWithEmailPassword);
@@ -14,6 +24,23 @@ export function* watchLogoutUser() {
   yield takeEvery(LOGOUT_USER, logout);
 }
 
+export function* watchGetCurrentUser() {
+  yield takeLatest(GET_CURRENT_USER, getUserInfor);
+}
+function* getUserInfor(action) {
+  const history = action.payload;
+  try {
+    const user = yield call(getCurrentUser);
+    if (user.error !== null) {
+      yield put(getUserSuccess(user));
+      history.push("/app/manager/genres");
+    } else {
+      console.log("Load user error");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 // export function* loginFlow() {
 //   while (true) {
 //     const { user, history } = yield take(LOGIN_USER);
@@ -54,19 +81,18 @@ function* loginWithEmailPassword({ payload }) {
   }
 }
 
-const registerWithEmailPasswordAsync = async (email, password) =>
-  await auth
-    .createUserWithEmailAndPassword(email, password)
-    .then((authUser) => authUser)
-    .catch((error) => error);
-
 function* logout({ payload }) {
   const { history } = payload;
   try {
     localStorage.removeItem(ACCESS_TOKEN);
+    history.push("/");
   } catch (error) {}
 }
 
 export default function* rootSaga() {
-  yield all([fork(watchLoginUser), fork(watchLogoutUser)]);
+  yield all([
+    fork(watchLoginUser),
+    fork(watchLogoutUser),
+    fork(watchGetCurrentUser),
+  ]);
 }

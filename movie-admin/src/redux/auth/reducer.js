@@ -3,6 +3,7 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   LOGOUT_USER,
+  GET_USER_SUCCESS,
 } from "../actions";
 
 const INIT_STATE = {
@@ -30,6 +31,13 @@ export default (state = INIT_STATE, action) => {
       };
     case LOGOUT_USER:
       return { ...state, user: null, error: "" };
+    case GET_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: action.payload,
+        error: "",
+      };
     default:
       return { ...state };
   }

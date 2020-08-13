@@ -16,7 +16,7 @@ import {
   GET_USER_SUCCESS,
   GET_FAVORITE_LIST_BY_USER_ID,
   GET_FAVORITE_LIST_BY_USER_ID_SUCCESS,
-  GET_FAVORITE_LIST_BY_USER_ID_ERROR
+  GET_FAVORITE_LIST_BY_USER_ID_ERROR,
 } from "../actions";
 
 export const loginUser = (user, history) => ({
@@ -80,7 +80,6 @@ export const logoutUser = () => ({
 
 export const getUserInfor = () => ({
   type: GET_USER,
-  payload: {},
 });
 
 export const getUserSuccess = (user) => ({
@@ -90,15 +89,15 @@ export const getUserSuccess = (user) => ({
 
 export const getFavoriteListByUserID = (id) => ({
   type: GET_FAVORITE_LIST_BY_USER_ID,
-  payload: id
+  payload: id,
 });
 
 export const getFavoriteListByUserIDSuccess = (favorite) => ({
   type: GET_FAVORITE_LIST_BY_USER_ID_SUCCESS,
-  payload: favorite
+  payload: favorite,
 });
 
 export const getFavoriteListByUserIDError = (message) => ({
   type: GET_FAVORITE_LIST_BY_USER_ID_ERROR,
-  payload: message
+  payload: message,
 });
