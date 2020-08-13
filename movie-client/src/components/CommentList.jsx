@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { addComment,getListComments } from "../redux/comment/actions"
+import { addComment, getListComments } from "../redux/comment/actions"
 class CommentList extends React.Component {
 
   constructor(props) {
@@ -26,18 +26,18 @@ class CommentList extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     // console.log("You are submitting " + this.state.commentContent);
-    const {commentForm} = this.state;
+    const { commentForm } = this.state;
     const movieId = parseInt(this.props.movieId);
-
+    const {user} = this.props;
     commentForm.content = this.state.commentContent;
     commentForm.movie_id = movieId;
-    commentForm.user_id = 2;
+    commentForm.user_id = user.id;
     this.props.addComment(commentForm);
     setTimeout(() => {
       this.props.getListComments(6, 0, movieId, -1);
-    },200)
-  } 
-  
+    }, 200)
+  }
+
   render() {
     return (
       <div>
@@ -63,9 +63,10 @@ class CommentList extends React.Component {
   }
 
 }
-const mapStateToProps =({  commentData }) => {
+const mapStateToProps = ({ commentData, authUser }) => {
   const { comments } = commentData;
-  return comments
+  const { user } = authUser;
+  return { comments, user }
 }
 export default connect(
   mapStateToProps,

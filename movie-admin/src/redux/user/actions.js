@@ -1,22 +1,22 @@
 import {
-    GET_USER, GET_FAVORITE_LIST_BY_USER_ID, EDIT_USER, DELETE_USER,
-    GET_USER_SUCCESS, GET_USER_ERROR,
+    GET_LIST_USER, GET_FAVORITE_LIST_BY_USER_ID, EDIT_USER, DELETE_USER,
+    GET_LIST_USER_SUCCESS, GET_LIST_USER_ERROR,
     GET_FAVORITE_LIST_BY_USER_ID_SUCCESS, GET_FAVORITE_LIST_BY_USER_ID_ERROR,
     EDIT_USER_SUCCESS, EDIT_USER_ERROR,
 } from "../actions";
 
 export const getListUsers = (selectedPageSize, currentPage, selectedOrderOption, search) => ({
-    type: GET_USER,
+    type: GET_LIST_USER,
     payload: { selectedPageSize, currentPage, selectedOrderOption, search }
 });
 
 export const getListUsersSuccess = (listUser) => ({
-    type: GET_USER_SUCCESS,
+    type: GET_LIST_USER_SUCCESS,
     payload: listUser
 });
 
 export const getListUserError = (message) => ({
-    type: GET_USER_ERROR,
+    type: GET_LIST_USER_ERROR,
     payload: message
 });
 

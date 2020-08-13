@@ -1,6 +1,5 @@
 import { apiEpisode } from '../constants/const'
-import axios from "axios";
-
+import axios from "../helpers/axios.instance";
 export const queryListEpisodes = async (movieId) => {
     return await axios
         .get(

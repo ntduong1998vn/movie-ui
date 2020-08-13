@@ -32,7 +32,7 @@ function NewComments({ deleteFlag, className = "", displayRate = false, comment 
 
                     <p className="font-weight-medium mb-0"> đăng lúc: {item.createAt} bởi {item.username}
                       <Button color="danger"
-                        style={{ marginLeft: "1100px" }}
+                        style={{ marginLeft: "700px" }}
                         onClick={() => deleteFlag(item.id)}>Xóa</Button>
                     </p>
                     <p className="text-muted mb-0 text-small">

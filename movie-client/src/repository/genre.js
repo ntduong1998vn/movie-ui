@@ -1,5 +1,5 @@
 import { apiGenre } from '../constants/const'
-import axios from "axios";
+import axios from "../helpers/axios.instance";
 
 export const queryListGenres = async (selectedOrderOption, search) => {
     return await axios.get(`${apiGenre}/?orderBy=${selectedOrderOption.column}&search=${search}`)

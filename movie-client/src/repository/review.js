@@ -1,5 +1,5 @@
 import { apiReview} from '../constants/const';
-import axios from "axios";
+import axios from "../helpers/axios.instance";
 
 export const queryListReviews = async (selectedPageSize, currentPage, movieId, userId) => {
     return await axios

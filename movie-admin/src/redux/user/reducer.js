@@ -1,6 +1,7 @@
 import {
-    GET_USER, GET_FAVORITE_LIST_BY_USER_ID, EDIT_USER, DELETE_USER,
+    GET_USER,GET_LIST_USER, GET_FAVORITE_LIST_BY_USER_ID, EDIT_USER, DELETE_USER,
     GET_USER_SUCCESS, GET_USER_ERROR,
+    GET_LIST_USER_SUCCESS,GET_LIST_USER_ERROR,
     GET_FAVORITE_LIST_BY_USER_ID_SUCCESS, GET_FAVORITE_LIST_BY_USER_ID_ERROR,
     EDIT_USER_SUCCESS, EDIT_USER_ERROR,
     DELETE_USER_SUCCESS, DELETE_USER_ERROR, DELETE_USER_QUESTION,
@@ -20,6 +21,7 @@ const INIT_STATE = {
         user_id: 0,
         current_time: 0
     }],
+    users:[]
 };
 
 export default (state = INIT_STATE, action) => {
@@ -35,6 +37,18 @@ export default (state = INIT_STATE, action) => {
         case GET_USER_ERROR:
             return {
                 ...state, isLoading: false, items: [], error: action.payload.message
+            }
+        case GET_LIST_USER:
+            return { ...state, isLoading: true, error: '', users: [] };
+        case GET_LIST_USER_SUCCESS:
+            console.log(action)
+            return {
+                ...state, isLoading: false, users: action.payload.content,
+                totalPages: action.payload.totalPages, totalItemCount: action.payload.totalElements, error: ''
+            }
+        case GET_LIST_USER_ERROR:
+            return {
+                ...state, isLoading: false, users: [], error: action.payload.message
             }
         case GET_FAVORITE_LIST_BY_USER_ID:
             // console.log(action)

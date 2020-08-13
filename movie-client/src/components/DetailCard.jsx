@@ -71,8 +71,7 @@ function DetailCard({ movie }) {
             <img className="avatar" alt="" ref={refImage} />
             <Link
               to={{
-                pathname: `/movie/${movie.id}/dadas`,
-                search: "?search=25",
+                pathname: `/movie/${movie.id}/`
               }}
               className="card__play"
             >
@@ -92,7 +91,7 @@ function DetailCard({ movie }) {
                   return (
                     <Link
                       to={{
-                        pathname: `/genre/${genre.name}/1`,
+                        pathname: `/tim-kiem`,
                         // search: "?sort=name",
                       }}
                     >
