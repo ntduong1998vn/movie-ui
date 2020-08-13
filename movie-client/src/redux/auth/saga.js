@@ -13,24 +13,24 @@ import {
   register,
 } from "./../../repository/AuthAPI";
 
-import {queryListFavorites} from "./../../repository/favorite";
+import { queryListFavorites } from "./../../repository/favorite";
 
 import {
   LOGIN_USER,
   REGISTER_USER,
   FORGOT_PASSWORD,
   GET_USER,
-  GET_USER_SUCCESS,  
+  GET_USER_SUCCESS,
   GET_FAVORITE_LIST_BY_USER_ID,
   GET_FAVORITE_LIST_BY_USER_ID_SUCCESS,
-  GET_FAVORITE_LIST_BY_USER_ID_ERROR
+  GET_FAVORITE_LIST_BY_USER_ID_ERROR,
 } from "../actions";
 
 import {
   loginUserSuccess,
   loginUserError,
   registerUserSuccess,
-  registerUserError, 
+  registerUserError,
   getFavoriteListByUserIDSuccess,
   getFavoriteListByUserIDError,
   forgotPasswordSuccess,
@@ -81,7 +81,8 @@ function* loginWithEmailPassword({ payload }) {
 function* getUserInfor() {
   try {
     const user = yield call(getCurrentUser);
-    if (user !== null) {
+    console.log(user);
+    if (!user.message) {
       yield put(getUserSuccess(user));
     } else {
       console.log("Load user error");
@@ -179,10 +180,10 @@ export function* watchLoginSocial() {
 function* handleLoginSocial({ payload }) {
   const { history } = payload;
   yield put({ type: GET_USER, payload: null });
-      const { payload: user } = yield take(GET_USER_SUCCESS);
-      console.log(user);
-      yield put(loginUserSuccess(user));
-      history.push("/user");
+  const { payload: user } = yield take(GET_USER_SUCCESS);
+  console.log(user);
+  yield put(loginUserSuccess(user));
+  history.push("/user");
 }
 
 export default function* rootSaga() {
