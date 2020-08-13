@@ -8,7 +8,7 @@ const MovieDetail = React.lazy(() =>
     import(/* webpackChunkName: "movie-detail" */ './MovieDetail')
 );
 const MovieForm = React.lazy(() =>
-    import(/* webpackChunkName: "forms-validations" */ './validations')
+    import(/* webpackChunkName: "forms-validations" */ './NewMovie')
 );
 const EpisodeList = React.lazy(() =>
     import(/* webpackChunkName: "forms-validations" */ './episode')

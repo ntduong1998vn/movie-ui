@@ -21,9 +21,9 @@ function CatalogPage(props) {
   function fetchData() {
     props.getListGenres("", "");
     // props.getListMovies(6,1,"","")
-    props.getMovieByGenre(2, 0);
+    // props.getMovieByGenre(6, 0);
   }
-  const { genres, movieByGenre } = props;
+  const { genres} = props;
 
   return (
     <React.Fragment>

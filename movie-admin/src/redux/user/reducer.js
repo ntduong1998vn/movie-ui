@@ -52,7 +52,7 @@ export default (state = INIT_STATE, action) => {
             return { ...state, isLoading: false, error: '' }
         case EDIT_USER_SUCCESS:
             console.log(action)
-            return { ...state, isLoading: false, error: '' }
+            return { ...state, isLoading: false, error: null }
         case EDIT_USER_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
 

@@ -1,5 +1,5 @@
 import { apiActor } from '../constants/const'
-import axios from "axios";
+import axios from "./../helpers/axios.instance";
 
 export const queryListActors = async (selectedPageSize,currentPage,selectedOrderOption, search) => {
     return await axios

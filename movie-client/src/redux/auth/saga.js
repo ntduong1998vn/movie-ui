@@ -172,6 +172,19 @@ function* handleGetFavoriteListByUserID({ payload }) {
   }
 }
 
+export function* watchLoginSocial() {
+  yield takeEvery(LOGIN_USER, handleLoginSocial);
+}
+
+function* handleLoginSocial({ payload }) {
+  const { history } = payload;
+  yield put({ type: GET_USER, payload: null });
+      const { payload: user } = yield take(GET_USER_SUCCESS);
+      console.log(user);
+      yield put(loginUserSuccess(user));
+      history.push("/user");
+}
+
 export default function* rootSaga() {
   yield all([
     fork(watchLoginUser),

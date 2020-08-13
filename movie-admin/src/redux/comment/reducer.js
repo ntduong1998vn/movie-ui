@@ -33,7 +33,7 @@ export default (state = INIT_STATE, action) => {
             return { ...state, isLoading: false, error: '' }
         case DELETE_COMMENT_SUCCESS:
             console.log(action)
-            return { ...state, isLoading: false, error: '' }
+            return { ...state, isLoading: false, error: null }
         case DELETE_COMMENT_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
         default:

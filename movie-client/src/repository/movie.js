@@ -1,5 +1,5 @@
 import { apiMovie } from '../constants/const'
-import axios from "axios";
+import axios from "../helpers/axios.instance";
 
 export const queryListMovies = async (selectedPageSize, currentPage, selectedOrderOption, search) => {
     return await axios
@@ -29,3 +29,11 @@ export const queryMovieByGenres = async (id,currentPage) => {
         .then(res => res.data)
         .catch(error => error.response)
 }
+
+export const searchAdvanced = async (currentPage,keyword) => {
+    return await axios
+    .get(`${apiMovie}/advanced?currentPage=${currentPage}&search=${keyword}`)
+    .then(res => res.data)
+    .catch(error => error.response)
+}
+

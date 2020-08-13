@@ -2,31 +2,44 @@ import React, { useState, useEffect } from "react";
 import DetailList from "../components/DetailList";
 // import Paginator from "../components/Paginator";
 import Pagination from '../components/Pagination';
-
-import { getMovieByGenre } from "../redux/movie/actions";
+import { getMovieByGenre,getMovieByKeyword } from "../redux/movie/actions";
 import { connect } from "react-redux";
 
 function CatalogList(props ) {
+  const {keyword} = props
   const [currentPage, setCurrentPage] = useState(1)
   // console.log(props)
   useEffect(() => {
-    fetchData(1);
-  }, []);
+    fetchDataByKeyword(0);
+ 
+    // let str = props.location.pathname
+    // let res = str.replace('/tim-kiem/','')
+    // console.log(res);
 
-  function fetchData(currentPage) {
-    props.getMovieByGenre(2, currentPage)
-  }
+  }, [keyword]);
+
+
+  // function fetchDataByGenre(currentPage) {
+  //   props.getMovieByGenre(6, currentPage)
+  //   // window.location.reload();
+  // }
+
+   function fetchDataByKeyword(currentPage) {
+     console.log(currentPage)
+     props.getMovieByKeyword(currentPage,keyword)
+   }
+
   function onChangePage(page) {
     setCurrentPage(page);
-    fetchData(page-1)
-  }
+    fetchDataByKeyword(page-1)
+  } 
+  
   // };
-  const { movieByGenre,totalPages } = props;
-  console.log(totalPages)
+  const { movieBySearches,totalPages } = props;
   return (
     <div className="catalog">
       <div className="container">
-        <DetailList movieList={movieByGenre} />
+        <DetailList movieList={movieBySearches} />
         <Pagination
           currentPage={currentPage}
           totalPage={totalPages}
@@ -38,14 +51,15 @@ function CatalogList(props ) {
 }
 const mapStateToProps = ({ movieData }) => {
 
-  const { movieByGenre, totalPages } = movieData;
-  return { movieByGenre,totalPages };
+  const { movieBySearches, totalPages, keyword } = movieData;
+  return { movieBySearches,totalPages, keyword};
 };
 
 export default connect(
   mapStateToProps,
   {
-    getMovieByGenre
+    getMovieByGenre,
+    getMovieByKeyword
   }
 )(CatalogList);
 // export default CatalogList;

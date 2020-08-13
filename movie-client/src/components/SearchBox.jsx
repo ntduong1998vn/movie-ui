@@ -1,21 +1,22 @@
 import React from 'react'
 import { useState } from 'react'
 import { withRouter } from "react-router-dom";
-
+import { connect } from "react-redux";
+import {storeKeywords} from "../redux/movie/actions"
 function SearchBox(props) {
     const [searchTerm, setSearchTerm] = useState("");
   
     function handleSubmit(e) {
-        console.log("submit")
+        // console.log("submit")
         e.preventDefault();
-        props.history.push({ pathname: `/tim-kiem?title=${searchTerm}` });
-    }
+        let keyword = "title:*"+searchTerm+'*'
+        props.history.push({ pathname: `/tim-kiem`});
+        props.storeKeywords(keyword)
+    }   
 
     function handleChange(e) {
         setSearchTerm(e.target.value);
     }
-
-
 
     return (
         <form className="header__search">
@@ -37,6 +38,14 @@ function SearchBox(props) {
     )
 }
 
-
-export default withRouter(SearchBox)
+const ShowTheLocationWithRouter = withRouter(SearchBox);
+const mapStateToProps = ({  }) => {
+  };
+  
+export default connect(
+    mapStateToProps,
+    {
+        storeKeywords
+    }
+  )(ShowTheLocationWithRouter);
 

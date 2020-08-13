@@ -25,20 +25,20 @@ export default (state = INIT_STATE, action) => {
             return { ...state, isLoading: false, error: '' }
         case ADD_GENRE_SUCCESS:
             // console.log(action)
-            return { ...state, isLoading: false, error: '' };
+            return { ...state, isLoading: false, error: null };
         case ADD_GENRE_ERROR:
             // console.log(action)
             return { ...state, isLoading: false, error: action.payload.message }
         case EDIT_GENRE:
             return { ...state, isLoading: false, error: '' }
         case EDIT_GENRE_SUCCESS:
-            return { ...state, isLoading: false, error: '' }
+            return { ...state, isLoading: false, error: null }
         case EDIT_GENRE_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
         case DELETE_GENRE:
             return { ...state, isLoading: false, error: '' }
         case DELETE_GENRE_SUCCESS:
-            return { ...state, isLoading: false, error: '' }
+            return { ...state, isLoading: false, error: null }
         case DELETE_GENRE_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
         default:
